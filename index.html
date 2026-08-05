@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orator</title>
+  <title>Orator — Mindful Speech Workspace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Georgia&display=swap" rel="stylesheet">
@@ -11,87 +11,227 @@
 </head>
 <body>
 
-  <!-- Top Navigation -->
+  <!-- Navigation -->
   <header class="navbar">
-    <a href="#" class="brand-logo">ORATOR</a>
+    <a href="#" class="brand-logo" onclick="showView('home')">ORATOR</a>
     <nav class="nav-links">
-      <a href="#practice" class="nav-link">Practice</a>
-      <a href="#learn" class="nav-link">Learn</a>
-      <a href="#library" class="nav-link">Library</a>
-      <a href="#frameworks" class="nav-link">Frameworks</a>
-      <a href="#journal" class="nav-link">Journal</a>
+      <a href="#practice" class="nav-link" onclick="showView('practice')">Practice</a>
+      <a href="#learn" class="nav-link" onclick="showView('learn')">Learn</a>
+      <a href="#library" class="nav-link" onclick="showView('library')">Library</a>
+      <a href="#frameworks" class="nav-link" onclick="showView('frameworks')">Frameworks</a>
+      <a href="#journal" class="nav-link" onclick="showView('journal')">Journal</a>
     </nav>
   </header>
 
   <!-- Main Container -->
   <main class="container">
     
-    <!-- Hero Greeting -->
-    <section class="hero">
-      <p class="greeting-time" id="greetingTime">Good evening,</p>
-      <h1 class="greeting-name">Sridipa</h1>
-      <p class="hero-subtext">What would you like to practice today?</p>
-    </section>
+    <!-- ==================== VIEW 1: HOME ==================== -->
+    <div id="view-home" class="view active">
+      <section class="hero">
+        <p class="greeting-time" id="greetingTime">Good evening,</p>
+        <h1 class="greeting-name">Sridipa</h1>
+        <p class="hero-subtext">What would you like to practice today?</p>
+      </section>
 
-    <!-- Workspace Grid -->
-    <section class="card-grid">
+      <section class="card-grid">
+        <div class="card" onclick="showView('practice')">
+          <div class="card-content">
+            <span class="card-category">Impromptu & Speech</span>
+            <h2 class="card-title">Practice</h2>
+            <p class="card-description">Build confidence through spontaneous speaking. Choose timed topics, interviews, or custom prompts.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-action">Start session &rarr;</span>
+          </div>
+        </div>
+
+        <div class="card card-featured" onclick="showView('learn')">
+          <div class="card-content">
+            <span class="card-category">Learn & Present</span>
+            <h2 class="card-title">Today's Curiosity</h2>
+            <p class="curiosity-quote" id="curiosityText">Loading curiosity...</p>
+            <p class="card-description">Research the topic, organize your narrative, and present it back clearly.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-action">Explore topic &rarr;</span>
+          </div>
+        </div>
+
+        <div class="card" onclick="showView('library')">
+          <div class="card-content">
+            <span class="card-category">Speaker Library</span>
+            <h2 class="card-title">Study Masters</h2>
+            <p class="card-description">Shadow world-class communicators like Simon Sinek, Brené Brown, and Shashi Tharoor.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-action">Browse speeches &rarr;</span>
+          </div>
+        </div>
+
+        <div class="card" onclick="showView('frameworks')">
+          <div class="card-content">
+            <span class="card-category">Mental Models</span>
+            <h2 class="card-title">Frameworks</h2>
+            <p class="card-description">Structure your thinking using proven models like STAR, PREP, MECE, and SCQA.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-action">Review models &rarr;</span>
+          </div>
+        </div>
+      </section>
+
+      <footer class="recent-session">
+        <span class="recent-label">Recent Session</span>
+        <a href="#journal" class="recent-link" onclick="showView('journal')">The Future of Work &bull; <span class="recent-time">2 days ago</span></a>
+      </footer>
+    </div>
+
+    <!-- ==================== VIEW 2: PRACTICE SETUP & RECORDING ==================== -->
+    <div id="view-practice" class="view">
+      <div id="practice-step-setup" class="panel">
+        <h2 class="section-title">Practice Session</h2>
+        <p class="section-subtitle">Configure your prompt and timing before starting.</p>
+        
+        <div class="form-group">
+          <label>Topic Category</label>
+          <select id="practiceCategory" class="custom-select">
+            <option value="Impromptu">Impromptu Thought</option>
+            <option value="Tech & Future">Tech & Future</option>
+            <option value="Leadership">Leadership & Philosophy</option>
+            <option value="Personal Story">Personal Narrative</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Target Duration</label>
+          <div class="pill-group">
+            <button class="pill active" onclick="setDuration(60, this)">1 Min</button>
+            <button class="pill" onclick="setDuration(120, this)">2 Mins</button>
+            <button class="pill" onclick="setDuration(300, this)">5 Mins</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="startPracticeSession()">Generate Prompt & Next &rarr;</button>
+      </div>
+
+      <div id="practice-step-recording" class="panel hidden">
+        <div class="studio-container">
+          <span class="studio-badge" id="activeCategory">Impromptu</span>
+          <h2 class="studio-prompt" id="activePrompt">Prompt loading...</h2>
+          <div class="timer-display" id="timerDisplay">01:00</div>
+
+          <div class="controls-row">
+            <button id="recordBtn" class="btn btn-record" onclick="toggleRecording()">● Start Recording</button>
+            <button id="finishBtn" class="btn btn-secondary hidden" onclick="finishRecording()">Finish & Review</button>
+          </div>
+          <p class="status-indicator" id="recordingStatus">Microphone ready</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 3: LEARN & PRESENT ==================== -->
+    <div id="view-learn" class="view">
+      <div class="panel">
+        <span class="card-category">Deep Dive</span>
+        <h2 class="section-title" id="learnTitle">Today's Curiosity</h2>
+        <p class="curiosity-quote large" id="learnTopic">Can one tiny decision change history?</p>
+        
+        <div class="learn-scaffolding">
+          <div class="scaffold-box">
+            <h3>1. Deconstruct</h3>
+            <p>What are the key facts, counter-arguments, and turning points?</p>
+          </div>
+          <div class="scaffold-box">
+            <h3>2. Connect</h3>
+            <p>Relate this concept to a personal anecdote or historical event.</p>
+          </div>
+          <div class="scaffold-box">
+            <h3>3. Synthesize</h3>
+            <p>Deliver a 2-minute clear summary using the PREP framework.</p>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="startLearnPractice()">Practice Presenting This &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 4: SPEAKER LIBRARY ==================== -->
+    <div id="view-library" class="view">
+      <h2 class="section-title">Speaker Shadowing</h2>
+      <p class="section-subtitle">Study speech pacing, pauses, and rhetorical structures from master communicators.</p>
       
-      <!-- Card 1: Practice -->
-      <a href="#practice" class="card">
-        <div class="card-content">
-          <span class="card-category">Impromptu & Speech</span>
-          <h2 class="card-title">Practice</h2>
-          <p class="card-description">Build confidence through spontaneous speaking. Choose timed topics, interviews, or custom prompts.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-category">Simon Sinek</span>
+            <h3 class="card-title">How Great Leaders Inspire Action</h3>
+            <p class="card-description">Focus on: Golden Circle narrative structure, deliberate pauses, and conversational tone.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-action">Shadow speech &rarr;</span>
+          </div>
         </div>
-        <div class="card-footer">
-          <span class="card-action">Start session &rarr;</span>
-        </div>
-      </a>
 
-      <!-- Card 2: Learn -->
-      <a href="#learn" class="card card-featured">
-        <div class="card-content">
-          <span class="card-category">Learn & Present</span>
-          <h2 class="card-title">Today's Curiosity</h2>
-          <p class="curiosity-quote" id="curiosityText">Loading curiosity...</p>
-          <p class="card-description">Research the topic, organize your narrative, and present it back clearly.</p>
+        <div class="card">
+          <div class="card-content">
+            <span class="card-category">Brené Brown</span>
+            <h3 class="card-title">The Power of Vulnerability</h3>
+            <p class="card-description">Focus on: Humor integration, authentic pacing, and emotional resonance.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-action">Shadow speech &rarr;</span>
+          </div>
         </div>
-        <div class="card-footer">
-          <span class="card-action">Explore topic &rarr;</span>
-        </div>
-      </a>
 
-      <!-- Card 3: Library -->
-      <a href="#library" class="card">
-        <div class="card-content">
-          <span class="card-category">Speaker Library</span>
-          <h2 class="card-title">Study Masters</h2>
-          <p class="card-description">Shadow world-class communicators like Simon Sinek, Brené Brown, and Shashi Tharoor.</p>
+        <div class="card">
+          <div class="card-content">
+            <span class="card-category">Shashi Tharoor</span>
+            <h3 class="card-title">Oxford Union Address</h3>
+            <p class="card-description">Focus on: Precise vocabulary, rhetorical contrast, and authoritative cadence.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-action">Shadow speech &rarr;</span>
+          </div>
         </div>
-        <div class="card-footer">
-          <span class="card-action">Browse speeches &rarr;</span>
-        </div>
-      </a>
+      </div>
+    </div>
 
-      <!-- Card 4: Frameworks -->
-      <a href="#frameworks" class="card">
-        <div class="card-content">
-          <span class="card-category">Mental Models</span>
-          <h2 class="card-title">Frameworks</h2>
-          <p class="card-description">Structure your thinking using proven models like STAR, PREP, MECE, and SCQA.</p>
-        </div>
-        <div class="card-footer">
-          <span class="card-action">Review models &rarr;</span>
-        </div>
-      </a>
+    <!-- ==================== VIEW 5: FRAMEWORKS ==================== -->
+    <div id="view-frameworks" class="view">
+      <h2 class="section-title">Mental Models</h2>
+      <p class="section-subtitle">Proven structures to organize thoughts under pressure.</p>
 
-    </section>
+      <div class="framework-list">
+        <div class="framework-card">
+          <h3>STAR Model</h3>
+          <p class="framework-sub">Situation &bull; Task &bull; Action &bull; Result</p>
+          <p>Ideal for behavioral interviews, storytelling, and contextualizing past accomplishments clearly.</p>
+        </div>
 
-    <!-- Recent Activity -->
-    <footer class="recent-session">
-      <span class="recent-label">Recent</span>
-      <a href="#resume" class="recent-link">The Future of Work &bull; <span class="recent-time">2 days ago</span></a>
-    </footer>
+        <div class="framework-card">
+          <h3>PREP Model</h3>
+          <p class="framework-sub">Point &bull; Reason &bull; Example &bull; Point</p>
+          <p>Best for impromptu questions, persuasive presentations, and clear structural arguments.</p>
+        </div>
+
+        <div class="framework-card">
+          <h3>SCQA Model</h3>
+          <p class="framework-sub">Situation &bull; Complication &bull; Question &bull; Answer</p>
+          <p>The gold standard for executive communication, problem-solving, and persuasive pitches.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 6: JOURNAL & REVIEW ==================== -->
+    <div id="view-journal" class="view">
+      <h2 class="section-title">Journal & Reflection</h2>
+      <p class="section-subtitle">Review past recordings, self-evaluate tone, and track delivery improvement.</p>
+
+      <div id="journalEntries" class="journal-list">
+        <p class="empty-state">No recordings saved yet. Complete a session in Practice!</p>
+      </div>
+    </div>
 
   </main>
 
