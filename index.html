@@ -31,6 +31,12 @@
                         "tertiary": "#b0c6f9",
                         "surface-container-low": "#1a1c1c",
                         "surface-container-lowest": "#0c0f0f",
+                        // Light mode colors
+                        "light-bg": "#f8f8f6",
+                        "light-surface": "#ffffff",
+                        "light-text": "#1a1a1a",
+                        "light-text-variant": "#666666",
+                        "light-border": "#e0e0e0",
                     },
                     borderRadius: {
                         DEFAULT: "0.25rem",
@@ -84,9 +90,17 @@
         * { box-sizing: border-box; }
         
         body {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.light {
+            background-color: #f8f8f6;
+            color: #1a1a1a;
+        }
+
+        body.dark {
             background-color: #121414;
             color: #e2e2e2;
-            font-family: 'Inter', sans-serif;
         }
 
         .fade-in-up {
@@ -111,661 +125,319 @@
         .page.active { display: block; }
 
         .hairline { height: 1px; background-color: #4e4639; }
+        body.light .hairline { background-color: #e0e0e0; }
 
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #4e4639; border-radius: 3px; }
+        body.light ::-webkit-scrollbar-thumb { background: #d0d0d0; }
 
-        textarea:focus { outline: none; border-bottom-color: #e9c176; }
+        .nav-section {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
 
-        .hover-lift:hover { transform: translateY(-2px); transition: transform 0.3s ease; }
+        .nav-section:hover {
+            opacity: 0.8;
+        }
+
+        .nav-section.active {
+            color: #e9c176;
+            border-bottom: 3px solid #e9c176;
+        }
+
+        .hover-lift:hover { 
+            transform: translateY(-2px); 
+            transition: transform 0.3s ease; 
+        }
     </style>
 </head>
-<body class="antialiased selection:bg-primary selection:text-background">
+<body class="dark antialiased selection:bg-primary">
 
-<!-- PAGE: LANDING / SIGNUP -->
-<div id="landing-page" class="page active min-h-screen flex flex-col items-center justify-center px-gutter py-stack-lg">
+<!-- PAGE: NAME INPUT (INITIAL LANDING) -->
+<div id="name-page" class="page active min-h-screen flex flex-col items-center justify-center px-gutter py-stack-lg">
     <div class="w-full max-w-md text-center">
         <div class="mb-stack-lg">
-            <h1 class="font-display-lg text-4xl text-primary mb-unit">Orator</h1>
+            <h1 class="font-display-lg text-5xl text-primary mb-unit">Orator</h1>
             <p class="font-body-md text-on-surface-variant italic">A studio for deliberate speaking.</p>
         </div>
 
         <div class="hairline my-stack-md"></div>
 
         <div class="mb-stack-lg text-left">
-            <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest block mb-4">Email</label>
-            <input type="email" id="signup-email" placeholder="Enter your email" class="w-full bg-transparent border-0 border-b border-outline-variant py-3 text-body-md placeholder-on-surface-variant/50 focus:border-primary focus:outline-none transition-colors">
+            <h2 class="font-headline-md text-headline-md text-on-surface mb-8">What should we call you?</h2>
+            <input type="text" id="user-name-input" placeholder="Enter your name" class="w-full bg-transparent border-0 border-b border-outline-variant py-3 text-body-md placeholder-on-surface-variant/50 focus:border-primary focus:outline-none transition-colors">
         </div>
 
-        <button onclick="goToOnboarding()" class="w-full bg-primary text-background font-label-caps text-label-caps py-3 uppercase tracking-widest hover:bg-primary-container transition-colors">
-            Begin
+        <button onclick="submitName()" class="w-full bg-primary text-background font-label-caps text-label-caps py-3 uppercase tracking-widest hover:bg-primary-container transition-colors">
+            Continue
         </button>
 
-        <p class="font-body-md text-on-surface-variant text-xs mt-stack-md">No account required. Practice begins with a name and a commitment.</p>
+        <p class="font-body-md text-on-surface-variant text-xs mt-stack-md">No account required. Start practicing immediately.</p>
     </div>
 </div>
 
-<!-- PAGE: ONBOARDING -->
-<div id="onboarding-page" class="page min-h-screen flex flex-col items-center justify-center px-gutter py-stack-lg">
-    <div class="w-full max-w-2xl relative">
-        <!-- Step 1: Name -->
-        <div id="step-1" class="step-content text-center fade-in-up">
-            <h1 class="font-display-lg-mobile md:font-display-lg text-3xl md:text-5xl mb-stack-md">What should we call you?</h1>
-            <div class="relative w-full max-w-md mx-auto">
-                <input type="text" id="onboard-name" placeholder="Enter your name" class="w-full bg-transparent border-0 border-b border-outline-variant focus:border-primary text-center font-body-lg text-body-lg py-4 outline-none transition-colors placeholder-on-surface-variant/50">
+<!-- PAGE: MAIN DASHBOARD -->
+<div id="dashboard-page" class="page min-h-screen flex flex-col">
+    <!-- Top Navigation Bar -->
+    <nav class="bg-background border-b border-outline-variant sticky top-0 z-40 py-6 px-gutter md:px-margin-page">
+        <div class="max-w-container-max mx-auto flex items-center justify-between">
+            <!-- Large Section Buttons -->
+            <div class="flex gap-8 items-center flex-wrap">
+                <button onclick="switchSection('speak')" class="nav-section active" id="nav-speak">Speak</button>
+                <button onclick="switchSection('shadow-hub')" class="nav-section" id="nav-shadow-hub">Shadow-Hub</button>
+                <button onclick="switchSection('frameworks')" class="nav-section" id="nav-frameworks">Frameworks</button>
+                <button onclick="switchSection('journal')" class="nav-section" id="nav-journal">Journal</button>
             </div>
-            <button onclick="nextStep(1)" class="mt-stack-lg border border-on-surface text-on-surface px-8 py-3 font-label-caps text-label-caps uppercase tracking-widest hover:bg-on-surface hover:text-background transition-colors">
-                Continue
-            </button>
-        </div>
 
-        <!-- Step 2: Goal -->
-        <div id="step-2" class="step-content text-center hidden opacity-0">
-            <h1 class="font-headline-md text-2xl mb-stack-md">What do you want to improve?</h1>
-            <div class="flex flex-col gap-4 max-w-md mx-auto text-left">
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="Presentations">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">Presentations</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
+            <!-- Top Right: Dark/Light Toggle + Profile -->
+            <div class="flex items-center gap-4">
+                <button onclick="toggleDarkMode()" class="text-on-surface-variant hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined" id="theme-icon">light_mode</span>
                 </button>
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="Interviews">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">Interviews</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
-                </button>
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="Storytelling">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">Storytelling</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
-                </button>
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="Executive Communication">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">Executive Communication</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
-                </button>
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="General Speaking">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">General Speaking</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
+                <button onclick="toggleProfile()" class="text-on-surface-variant hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">account_circle</span>
                 </button>
             </div>
-            <button onclick="nextStep(2)" class="mt-stack-md border border-on-surface text-on-surface px-8 py-3 font-label-caps text-label-caps uppercase tracking-widest hover:bg-on-surface hover:text-background transition-colors">
-                Continue
-            </button>
         </div>
+    </nav>
 
-        <!-- Step 3: Experience -->
-        <div id="step-3" class="step-content text-center hidden opacity-0">
-            <h1 class="font-headline-md text-2xl mb-stack-md">Experience level</h1>
-            <div class="flex flex-col gap-4 max-w-md mx-auto text-left">
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="Beginner">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">Beginner</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
-                </button>
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="Intermediate">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">Intermediate</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
-                </button>
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="Advanced">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">Advanced</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
-                </button>
-            </div>
-            <button onclick="nextStep(3)" class="mt-stack-md border border-on-surface text-on-surface px-8 py-3 font-label-caps text-label-caps uppercase tracking-widest hover:bg-on-surface hover:text-background transition-colors">
-                Continue
-            </button>
-        </div>
-
-        <!-- Step 4: Challenge -->
-        <div id="step-4" class="step-content text-center hidden opacity-0">
-            <h1 class="font-headline-md text-2xl mb-stack-md">Biggest challenge</h1>
-            <div class="flex flex-col gap-4 max-w-md mx-auto text-left">
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="Going blank">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">Going blank</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
-                </button>
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="Confidence">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">Confidence</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
-                </button>
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="Structure">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">Structure</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
-                </button>
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="Speaking too fast">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">Speaking too fast</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
-                </button>
-                <button class="option-btn w-full border border-outline-variant p-6 flex items-center justify-between hover:border-primary transition-colors group" data-value="Filler words">
-                    <span class="font-body-lg text-on-surface group-hover:text-primary">Filler words</span>
-                    <div class="w-2 h-2 border border-outline-variant"></div>
-                </button>
-            </div>
-            <button onclick="finishOnboarding()" class="mt-stack-md bg-primary text-background px-8 py-3 font-label-caps text-label-caps uppercase tracking-widest hover:bg-primary-container transition-colors">
-                Begin Journey
-            </button>
-        </div>
-
-        <!-- Progress Bar -->
-        <div class="fixed bottom-0 left-0 w-full h-[2px] bg-outline-variant">
-            <div id="progress-bar" class="h-full bg-primary transition-all duration-500 ease-out" style="width: 25%;"></div>
-        </div>
-    </div>
-</div>
-
-<!-- PAGE: HOMEPAGE -->
-<div id="homepage" class="page">
-    <!-- Navigation -->
-    <header class="hidden md:flex bg-background border-b border-outline-variant sticky top-0 z-50">
-        <div class="flex justify-between items-center w-full px-margin-page max-w-container-max mx-auto h-24">
-            <div class="font-headline-md text-primary tracking-tight">Orator</div>
-            <nav class="flex items-center gap-8">
-                <a href="#" onclick="goToPage('speak-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Speak</a>
-                <a href="#" onclick="goToPage('shadow-hub-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Shadow-Hub</a>
-                <a href="#" onclick="goToPage('frameworks-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Frameworks</a>
-                <a href="#" onclick="goToPage('journal-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Journal</a>
-            </nav>
-            <button onclick="goToPage('profile-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors">Profile</button>
-        </div>
-    </header>
-
-    <!-- Mobile Nav -->
-    <header class="md:hidden flex bg-background border-b border-outline-variant sticky top-0 z-50">
-        <div class="flex justify-between items-center w-full px-gutter h-16">
-            <div class="font-display-lg-mobile text-primary">Orator</div>
-            <button onclick="goToPage('profile-page')" class="text-on-surface-variant hover:text-primary">
-                <span class="material-symbols-outlined">account_circle</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="w-full max-w-container-max mx-auto px-gutter md:px-margin-page pt-stack-md md:pt-stack-lg pb-stack-lg flex flex-col items-center">
-        <!-- Greeting Section -->
-        <section class="w-full text-center mb-stack-lg relative fade-in-up">
-            <div class="absolute top-0 right-0 font-label-caps text-label-caps text-on-surface-variant opacity-60" id="current-date"></div>
-            <h1 class="font-display-lg-mobile md:font-display-lg text-3xl md:text-5xl text-on-surface mt-12 md:mt-0 mb-stack-md">
-                <span id="greeting-text">Good morning</span>, <span class="text-primary italic" id="greeting-name">there</span>.
+    <!-- Welcome Greeting (only visible on first load) -->
+    <div id="welcome-banner" class="bg-surface-container-lowest border-b border-outline-variant px-gutter md:px-margin-page py-stack-md fade-in-up">
+        <div class="max-w-container-max mx-auto">
+            <h1 class="font-display-lg-mobile md:font-display-lg text-3xl md:text-5xl text-on-surface">
+                <span class="text-primary italic" id="greeting-name">Hello, there</span>!
             </h1>
-            <div class="w-16 h-px bg-outline-variant mx-auto"></div>
-        </section>
+            <p class="font-body-lg text-on-surface-variant mt-2">Choose a section to begin.</p>
+        </div>
+    </div>
 
-        <!-- Four Equal Panels -->
-        <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            <!-- Panel 1: Speak -->
-            <article class="group border border-outline-variant hover:border-primary hover-lift transition-all duration-500 p-8 md:p-16 flex flex-col items-center text-center fade-in-up delay-1 bg-surface-container-lowest cursor-pointer" onclick="goToPage('speak-page')">
-                <h2 class="font-headline-md text-headline-md text-on-surface mb-6 group-hover:text-primary transition-colors">Speak</h2>
-                <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">Practice impromptu speaking with endless prompts. Think on your feet.</p>
-                <div class="flex items-center gap-2 font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors">
-                    Enter Studio <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                </div>
-            </article>
+    <!-- Main Content Area -->
+    <main class="flex-grow px-gutter md:px-margin-page py-stack-lg">
+        <div class="max-w-container-max mx-auto">
+            <!-- SPEAK SECTION -->
+            <section id="speak-section" class="section-content">
+                <header class="mb-stack-lg">
+                    <h2 class="font-headline-md text-headline-md text-on-surface mb-4">Speak</h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant">Practice impromptu speaking. Random topics. Real-time thinking. No preparation.</p>
+                </header>
 
-            <!-- Panel 2: Shadow-Hub -->
-            <article class="group border border-outline-variant hover:border-primary hover-lift transition-all duration-500 p-8 md:p-16 flex flex-col items-center text-center fade-in-up delay-2 bg-surface-container-lowest cursor-pointer" onclick="goToPage('shadow-hub-page')">
-                <h2 class="font-headline-md text-headline-md text-on-surface mb-6 group-hover:text-primary transition-colors">Shadow-Hub</h2>
-                <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">Learn from great speakers. Observe structure, delivery, and mastery.</p>
-                <div class="flex items-center gap-2 font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors">
-                    Explore Library <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                <!-- Device Prep Instructions -->
+                <div class="border border-outline-variant bg-surface-container-lowest p-8 mb-stack-lg rounded-lg">
+                    <h3 class="font-headline-md text-headline-md text-on-surface mb-4">Get Ready</h3>
+                    <ul class="space-y-3">
+                        <li class="flex gap-3">
+                            <span class="text-primary font-bold flex-shrink-0">→</span>
+                            <p class="font-body-md text-on-surface-variant"><strong>Find a quiet space.</strong> Minimize distractions.</p>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-primary font-bold flex-shrink-0">→</span>
+                            <p class="font-body-md text-on-surface-variant"><strong>Position your device.</strong> Phone or laptop, steady and facing you. Video recommended.</p>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-primary font-bold flex-shrink-0">→</span>
+                            <p class="font-body-md text-on-surface-variant"><strong>Test audio.</strong> Make sure you can be heard clearly.</p>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-primary font-bold flex-shrink-0">→</span>
+                            <p class="font-body-md text-on-surface-variant"><strong>Ready?</strong> Hit "Spin a Topic" to begin. You'll have 2 minutes.</p>
+                        </li>
+                    </ul>
                 </div>
-            </article>
 
-            <!-- Panel 3: Frameworks -->
-            <article class="group border border-outline-variant hover:border-primary hover-lift transition-all duration-500 p-8 md:p-16 flex flex-col items-center text-center fade-in-up delay-3 bg-surface-container-lowest cursor-pointer" onclick="goToPage('frameworks-page')">
-                <h2 class="font-headline-md text-headline-md text-on-surface mb-6 group-hover:text-primary transition-colors">Frameworks</h2>
-                <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">Mental models for organizing thought and narrative flow.</p>
-                <div class="flex items-center gap-2 font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors">
-                    Review Structures <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                </div>
-            </article>
+                <!-- Two Practice Modes -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Impromptu Mode -->
+                    <article class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg">
+                        <h3 class="font-headline-md text-headline-md text-on-surface mb-4">Impromptu</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant mb-8">Totally random prompts. Think and speak without a net. 2 minutes. One topic. Go.</p>
+                        <a href="https://www.unprompted.cool/" target="_blank" class="inline-flex items-center gap-2 font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors border-b border-primary hover:border-on-surface pb-1">
+                            Open Studio <span class="material-symbols-outlined text-sm">open_in_new</span>
+                        </a>
+                    </article>
 
-            <!-- Panel 4: Journal -->
-            <article class="group border border-outline-variant hover:border-primary hover-lift transition-all duration-500 p-8 md:p-16 flex flex-col items-center text-center fade-in-up delay-4 bg-surface-container-lowest cursor-pointer" onclick="goToPage('journal-page')">
-                <h2 class="font-headline-md text-headline-md text-on-surface mb-6 group-hover:text-primary transition-colors">Journal</h2>
-                <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">Archive your sessions. Reflect on progress. Build habits.</p>
-                <div class="flex items-center gap-2 font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors">
-                    Open Archive <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    <!-- Spin a Topic Mode -->
+                    <article class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg">
+                        <h3 class="font-headline-md text-headline-md text-on-surface mb-4">Spin a Topic</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant mb-8">Get a random prompt. Record yourself on your device. No pressure to share.</p>
+                        <button onclick="spinTopic()" class="inline-flex items-center gap-2 font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors border-b border-primary hover:border-on-surface pb-1">
+                            Generate Topic <span class="material-symbols-outlined text-sm">refresh</span>
+                        </button>
+                    </article>
                 </div>
-            </article>
+
+                <!-- Topic Display (hidden initially) -->
+                <div id="topic-display" class="hidden mt-stack-lg">
+                    <div class="border-l-4 border-primary bg-surface-container-lowest p-8 rounded-lg">
+                        <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-4">Your Topic</p>
+                        <h3 class="font-display-lg-mobile text-3xl text-on-surface mb-6" id="generated-topic"></h3>
+                        <p class="font-body-md text-on-surface-variant mb-6">You have 2 minutes. Start when ready. Record on your device.</p>
+                        <div class="flex gap-4">
+                            <button onclick="spinTopic()" class="border border-outline-variant text-on-surface px-6 py-2 font-label-caps text-label-caps uppercase hover:border-primary hover:text-primary transition-colors">
+                                New Topic
+                            </button>
+                            <button onclick="closeTopic()" class="bg-primary text-background px-6 py-2 font-label-caps text-label-caps uppercase hover:bg-primary-container transition-colors">
+                                Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SHADOW-HUB SECTION -->
+            <section id="shadow-hub-section" class="section-content hidden">
+                <header class="mb-stack-lg">
+                    <h2 class="font-headline-md text-headline-md text-on-surface mb-4">Shadow-Hub</h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant">Learn from great speakers. Observe structure, delivery, and mastery. Then practice mimicking them.</p>
+                </header>
+
+                <!-- Difficulty Filter -->
+                <div class="flex gap-4 mb-stack-lg">
+                    <button onclick="filterSpeakers('easy')" class="filter-btn active font-label-caps text-label-caps px-4 py-2 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors" id="filter-easy">Easy</button>
+                    <button onclick="filterSpeakers('medium')" class="filter-btn font-label-caps text-label-caps px-4 py-2 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors" id="filter-medium">Medium</button>
+                    <button onclick="filterSpeakers('advanced')" class="filter-btn font-label-caps text-label-caps px-4 py-2 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors" id="filter-advanced">Advanced</button>
+                </div>
+
+                <!-- Speaker Cards Grid -->
+                <div id="speakers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- FRAMEWORKS SECTION -->
+            <section id="frameworks-section" class="section-content hidden">
+                <header class="mb-stack-lg">
+                    <h2 class="font-headline-md text-headline-md text-on-surface mb-4">Frameworks</h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant">Mental models for organizing thought and commanding narrative flow.</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- STAR Framework -->
+                    <div class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg">
+                        <h3 class="font-headline-md text-headline-md text-on-surface mb-2">STAR</h3>
+                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-6">Situation, Task, Action, Result</p>
+                        <div class="space-y-4 text-sm">
+                            <div>
+                                <p class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-1">When to use</p>
+                                <p class="font-body-md text-on-surface-variant">Behavioral interviews, performance reviews.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PREP Framework -->
+                    <div class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg">
+                        <h3 class="font-headline-md text-headline-md text-on-surface mb-2">PREP</h3>
+                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-6">Point, Reason, Example, Point</p>
+                        <div class="space-y-4 text-sm">
+                            <div>
+                                <p class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-1">When to use</p>
+                                <p class="font-body-md text-on-surface-variant">Impromptu speaking, Q&A sessions.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SCQA Framework -->
+                    <div class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg">
+                        <h3 class="font-headline-md text-headline-md text-on-surface mb-2">SCQA</h3>
+                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-6">Situation, Complication, Question, Answer</p>
+                        <div class="space-y-4 text-sm">
+                            <div>
+                                <p class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-1">When to use</p>
+                                <p class="font-body-md text-on-surface-variant">Executive presentations, proposals.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MECE Framework -->
+                    <div class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg">
+                        <h3 class="font-headline-md text-headline-md text-on-surface mb-2">MECE</h3>
+                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-6">Mutually Exclusive, Collectively Exhaustive</p>
+                        <div class="space-y-4 text-sm">
+                            <div>
+                                <p class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-1">When to use</p>
+                                <p class="font-body-md text-on-surface-variant">Problem-solving, categorizing data.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PPF Framework -->
+                    <div class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg md:col-span-2 md:w-1/2 md:mx-auto">
+                        <h3 class="font-headline-md text-headline-md text-on-surface mb-2">PPF</h3>
+                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-6">Past, Present, Future</p>
+                        <div class="space-y-4 text-sm">
+                            <div>
+                                <p class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-1">When to use</p>
+                                <p class="font-body-md text-on-surface-variant">Introductions, demonstrating trajectory.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- JOURNAL SECTION -->
+            <section id="journal-section" class="section-content hidden">
+                <header class="mb-stack-lg">
+                    <h2 class="font-headline-md text-headline-md text-on-surface mb-4">Journal</h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant">Archive of your sessions. Build a practice log.</p>
+                </header>
+
+                <div id="journal-entries" class="space-y-6">
+                    <!-- Entries populated by JavaScript -->
+                </div>
+
+                <div id="empty-journal" class="text-center py-stack-lg">
+                    <p class="font-body-lg text-body-lg text-on-surface-variant mb-4">No entries yet. Start practicing to build your archive.</p>
+                    <button onclick="switchSection('speak')" class="font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors border-b border-primary hover:border-on-surface pb-1">
+                        Begin First Session
+                    </button>
+                </div>
+            </section>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-background border-t border-outline-variant full-width mt-stack-lg">
-        <div class="flex flex-col md:flex-row justify-between items-center w-full px-margin-page py-stack-md max-w-container-max mx-auto gap-8 md:gap-0">
-            <div class="font-headline-md text-primary">Orator</div>
-            <div class="font-label-caps text-label-caps text-on-surface-variant">© Orator. The Vessel for Voice.</div>
-            <nav class="flex items-center gap-6">
-                <a href="#" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Privacy</a>
-                <a href="#" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Terms</a>
-            </nav>
-        </div>
-    </footer>
-</div>
-
-<!-- PAGE: SPEAK -->
-<div id="speak-page" class="page">
-    <header class="hidden md:flex bg-background border-b border-outline-variant sticky top-0 z-50">
-        <div class="flex justify-between items-center w-full px-margin-page max-w-container-max mx-auto h-24">
-            <button onclick="goToPage('homepage')" class="font-headline-md text-primary tracking-tight">Orator</button>
-            <nav class="flex items-center gap-8">
-                <button onclick="goToPage('speak-page')" class="font-label-caps text-label-caps text-primary border-b border-primary pb-1">Speak</button>
-                <button onclick="goToPage('shadow-hub-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Shadow-Hub</button>
-                <button onclick="goToPage('frameworks-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Frameworks</button>
-                <button onclick="goToPage('journal-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Journal</button>
-            </nav>
-            <button onclick="goToPage('profile-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary">Profile</button>
-        </div>
-    </header>
-
-    <main class="max-w-container-max mx-auto px-gutter md:px-margin-page py-stack-lg min-h-screen flex flex-col">
-        <header class="mb-stack-lg text-center md:text-left max-w-3xl mx-auto md:mx-0">
-            <h1 class="font-display-lg-mobile md:font-display-lg text-3xl md:text-5xl mb-unit text-primary">Speak</h1>
-            <p class="font-body-lg text-body-lg text-on-surface-variant">Practice impromptu speaking. Random prompts. Real-time thinking. No preparation. Enter the flow.</p>
-        </header>
-
-        <div class="border-t border-outline-variant pt-stack-md mt-stack-lg flex-grow">
-            <h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-stack-md">Practice Mode</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Impromptu Card -->
-                <article class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest flex flex-col justify-between">
-                    <div>
-                        <h3 class="font-headline-md text-headline-md text-on-surface mb-4">Impromptu</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant mb-6">Random, unexpected prompts. Challenge yourself to think and speak without a net. Two minutes. One topic. Go.</p>
-                    </div>
-                    <a href="https://www.unprompted.cool/" target="_blank" class="inline-flex items-center gap-2 font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors border-b border-primary hover:border-on-surface pb-1">
-                        Open Studio <span class="material-symbols-outlined text-sm">open_in_new</span>
-                    </a>
-                </article>
-
-                <!-- Deep Research Card -->
-                <article class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest flex flex-col justify-between">
-                    <div>
-                        <h3 class="font-headline-md text-headline-md text-on-surface mb-4">Deep Research</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant mb-6">Choose a complex topic. Research it. Organize your thoughts. Then record yourself explaining it clearly. Mastery through depth.</p>
-                    </div>
-                    <button onclick="goToPage('speak-research-page')" class="inline-flex items-center gap-2 font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors border-b border-primary hover:border-on-surface pb-1 text-left">
-                        Begin Session <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                    </button>
-                </article>
+    <footer class="bg-surface border-t border-outline-variant mt-stack-lg">
+        <div class="px-gutter md:px-margin-page py-stack-md max-w-container-max mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="font-headline-md text-primary">Orator</div>
+                <div class="font-label-caps text-label-caps text-on-surface-variant">© Orator. The Vessel for Voice.</div>
             </div>
         </div>
-    </main>
-
-    <footer class="bg-background border-t border-outline-variant mt-stack-lg">
-        <div class="flex flex-col md:flex-row justify-between items-center w-full px-margin-page py-stack-md max-w-container-max mx-auto gap-8 md:gap-0">
-            <div class="font-headline-md text-primary">Orator</div>
-            <div class="font-label-caps text-label-caps text-on-surface-variant">© Orator. The Vessel for Voice.</div>
-        </div>
     </footer>
 </div>
 
-<!-- PAGE: SHADOW-HUB -->
-<div id="shadow-hub-page" class="page">
-    <header class="hidden md:flex bg-background border-b border-outline-variant sticky top-0 z-50">
-        <div class="flex justify-between items-center w-full px-margin-page max-w-container-max mx-auto h-24">
-            <button onclick="goToPage('homepage')" class="font-headline-md text-primary tracking-tight">Orator</button>
-            <nav class="flex items-center gap-8">
-                <button onclick="goToPage('speak-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Speak</button>
-                <button onclick="goToPage('shadow-hub-page')" class="font-label-caps text-label-caps text-primary border-b border-primary pb-1">Shadow-Hub</button>
-                <button onclick="goToPage('frameworks-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Frameworks</button>
-                <button onclick="goToPage('journal-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Journal</button>
-            </nav>
-            <button onclick="goToPage('profile-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary">Profile</button>
-        </div>
-    </header>
-
-    <main class="max-w-container-max mx-auto px-gutter md:px-margin-page py-stack-lg min-h-screen flex flex-col">
-        <header class="mb-stack-lg text-center md:text-left">
-            <h1 class="font-display-lg-mobile md:font-display-lg text-3xl md:text-5xl mb-unit text-primary">Shadow-Hub</h1>
-            <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Learn from excellence. Watch great speakers. Understand their structure, pacing, and delivery. Then practice mimicking them.</p>
-        </header>
-
-        <!-- Difficulty Filter -->
-        <div class="border-t border-outline-variant pt-stack-md mb-stack-lg flex gap-4">
-            <button onclick="filterSpeakers('easy')" id="filter-easy" class="font-label-caps text-label-caps px-4 py-2 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors cursor-pointer selected-filter">Easy</button>
-            <button onclick="filterSpeakers('medium')" id="filter-medium" class="font-label-caps text-label-caps px-4 py-2 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors cursor-pointer">Medium</button>
-            <button onclick="filterSpeakers('advanced')" id="filter-advanced" class="font-label-caps text-label-caps px-4 py-2 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors cursor-pointer">Advanced</button>
-        </div>
-
-        <!-- Speaker Cards Grid -->
-        <div id="speakers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Will be populated by JavaScript -->
-        </div>
-    </main>
-
-    <footer class="bg-background border-t border-outline-variant mt-stack-lg">
-        <div class="flex flex-col md:flex-row justify-between items-center w-full px-margin-page py-stack-md max-w-container-max mx-auto gap-8 md:gap-0">
-            <div class="font-headline-md text-primary">Orator</div>
-            <div class="font-label-caps text-label-caps text-on-surface-variant">© Orator. The Vessel for Voice.</div>
-        </div>
-    </footer>
-</div>
-
-<!-- PAGE: SPEAKER DETAIL (in Shadow-Hub) -->
-<div id="speaker-detail-page" class="page">
-    <header class="hidden md:flex bg-background border-b border-outline-variant sticky top-0 z-50">
-        <div class="flex justify-between items-center w-full px-margin-page max-w-container-max mx-auto h-24">
-            <button onclick="goToPage('shadow-hub-page')" class="font-headline-md text-primary tracking-tight">Orator</button>
-            <nav class="flex items-center gap-8">
-                <button onclick="goToPage('speak-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Speak</button>
-                <button onclick="goToPage('shadow-hub-page')" class="font-label-caps text-label-caps text-primary border-b border-primary pb-1">Shadow-Hub</button>
-                <button onclick="goToPage('frameworks-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Frameworks</button>
-                <button onclick="goToPage('journal-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Journal</button>
-            </nav>
-            <button onclick="goToPage('profile-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary">Profile</button>
-        </div>
-    </header>
-
-    <main class="max-w-container-max mx-auto px-gutter md:px-margin-page py-stack-lg min-h-screen">
-        <button onclick="goToPage('shadow-hub-page')" class="mb-stack-md font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors">
-            <span class="material-symbols-outlined text-sm">arrow_back</span> Back to Library
-        </button>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
-            <!-- Left: Speaker Info & Video -->
-            <div class="md:col-span-2">
-                <header class="mb-stack-lg">
-                    <span id="speaker-difficulty" class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-2 inline-block">Easy</span>
-                    <h1 id="speaker-name" class="font-display-lg-mobile text-3xl text-on-surface mb-2">Susan Cain</h1>
-                    <p id="speaker-title" class="font-body-lg text-body-lg text-on-surface-variant">The Power of Introverts • 14:04</p>
-                </header>
-
-                <!-- YouTube Player -->
-                <div class="mb-stack-lg bg-surface-container-lowest border border-outline-variant aspect-video">
-                    <iframe id="speaker-video" width="100%" height="100%" src="" title="TED Talk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-
-                <!-- Speaker Notes -->
-                <section>
-                    <h2 class="font-headline-md text-headline-md text-on-surface mb-4 border-b border-outline-variant pb-4">Suggested Observations</h2>
-                    <ul class="space-y-4">
-                        <li class="flex gap-4">
-                            <span class="font-label-caps text-label-caps text-primary flex-shrink-0">•</span>
-                            <p class="font-body-md text-body-md text-on-surface-variant">Notice the deliberate pacing. Long pauses create space for ideas to land.</p>
-                        </li>
-                        <li class="flex gap-4">
-                            <span class="font-label-caps text-label-caps text-primary flex-shrink-0">•</span>
-                            <p class="font-body-md text-body-md text-on-surface-variant">Observe how vulnerability is used to build connection with the audience.</p>
-                        </li>
-                        <li class="flex gap-4">
-                            <span class="font-label-caps text-label-caps text-primary flex-shrink-0">•</span>
-                            <p class="font-body-md text-body-md text-on-surface-variant">Watch the narrative arc: personal story → research → call to action.</p>
-                        </li>
-                    </ul>
-                </section>
-            </div>
-
-            <!-- Right: Recording Interface -->
-            <div class="md:col-span-1">
-                <div class="border border-outline-variant p-8 bg-surface-container-lowest sticky top-24">
-                    <h3 class="font-headline-md text-headline-md text-on-surface mb-6">Record Yourself</h3>
-                    <p class="font-body-md text-body-md text-on-surface-variant mb-6">Watch the video. Then record your own version. Practice mimicking their delivery, pacing, and energy.</p>
-                    
-                    <div class="space-y-4">
-                        <div id="recording-status" class="text-center">
-                            <div class="font-body-lg text-body-lg text-primary mb-4 font-mono">Ready</div>
-                            <button onclick="startRecording()" id="record-btn" class="w-full bg-primary text-background font-label-caps text-label-caps py-3 uppercase tracking-widest hover:bg-primary-container transition-colors">
-                                Start Recording
-                            </button>
-                        </div>
-
-                        <div id="recording-timer" class="text-center hidden">
-                            <div class="font-display-lg text-3xl text-primary mb-4 font-mono" id="timer-display">00:00</div>
-                            <button onclick="stopRecording()" class="w-full bg-on-surface text-background font-label-caps text-label-caps py-3 uppercase tracking-widest hover:bg-on-surface-variant transition-colors">
-                                Stop Recording
-                            </button>
-                        </div>
-
-                        <div id="recording-saved" class="text-center hidden">
-                            <p class="font-body-md text-body-md text-on-surface-variant mb-4">✓ Recording saved to Journal</p>
-                            <button onclick="startRecording()" class="w-full border border-outline-variant text-on-surface font-label-caps text-label-caps py-3 uppercase tracking-widest hover:border-primary transition-colors">
-                                Record Again
-                            </button>
-                        </div>
-                    </div>
-
-                    <p class="font-body-md text-body-md text-on-surface-variant text-xs mt-6 italic">
-                        Prefer privacy? Record on your mobile device and save it separately. No pressure to share.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="bg-background border-t border-outline-variant mt-stack-lg">
-        <div class="flex flex-col md:flex-row justify-between items-center w-full px-margin-page py-stack-md max-w-container-max mx-auto gap-8 md:gap-0">
-            <div class="font-headline-md text-primary">Orator</div>
-            <div class="font-label-caps text-label-caps text-on-surface-variant">© Orator. The Vessel for Voice.</div>
-        </div>
-    </footer>
-</div>
-
-<!-- PAGE: FRAMEWORKS -->
-<div id="frameworks-page" class="page">
-    <header class="hidden md:flex bg-background border-b border-outline-variant sticky top-0 z-50">
-        <div class="flex justify-between items-center w-full px-margin-page max-w-container-max mx-auto h-24">
-            <button onclick="goToPage('homepage')" class="font-headline-md text-primary tracking-tight">Orator</button>
-            <nav class="flex items-center gap-8">
-                <button onclick="goToPage('speak-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Speak</button>
-                <button onclick="goToPage('shadow-hub-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Shadow-Hub</button>
-                <button onclick="goToPage('frameworks-page')" class="font-label-caps text-label-caps text-primary border-b border-primary pb-1">Frameworks</button>
-                <button onclick="goToPage('journal-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Journal</button>
-            </nav>
-            <button onclick="goToPage('profile-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary">Profile</button>
-        </div>
-    </header>
-
-    <main class="max-w-container-max mx-auto px-gutter md:px-margin-page py-stack-lg min-h-screen flex flex-col">
-        <header class="mb-stack-lg text-center md:text-left max-w-3xl mx-auto md:mx-0">
-            <h1 class="font-display-lg-mobile md:font-display-lg text-3xl md:text-5xl mb-unit text-primary">Frameworks</h1>
-            <p class="font-body-lg text-body-lg text-on-surface-variant">Mental models for organizing thought and commanding narrative flow. Select a framework to understand its mechanics.</p>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- STAR Framework -->
-            <article class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest flex flex-col">
-                <header class="mb-8">
-                    <h2 class="font-headline-md text-headline-md text-on-surface mb-2">STAR</h2>
-                    <p class="font-label-caps text-label-caps text-on-surface-variant">Situation, Task, Action, Result</p>
-                </header>
-                <div class="hairline mb-8"></div>
-                <div class="flex-grow space-y-6">
-                    <div>
-                        <h3 class="font-label-caps text-label-caps text-primary mb-2 uppercase tracking-widest">When to use</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant">Behavioral interviews, performance reviews, or anytime you need to narrate a specific past achievement concisely.</p>
-                    </div>
-                    <div>
-                        <h3 class="font-label-caps text-label-caps text-primary mb-2 uppercase tracking-widest">How to use</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant">Establish the context (S), define your responsibility (T), detail your specific steps (A), and quantify the outcome (R).</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- PREP Framework -->
-            <article class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest flex flex-col">
-                <header class="mb-8">
-                    <h2 class="font-headline-md text-headline-md text-on-surface mb-2">PREP</h2>
-                    <p class="font-label-caps text-label-caps text-on-surface-variant">Point, Reason, Example, Point</p>
-                </header>
-                <div class="hairline mb-8"></div>
-                <div class="flex-grow space-y-6">
-                    <div>
-                        <h3 class="font-label-caps text-label-caps text-primary mb-2 uppercase tracking-widest">When to use</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant">Impromptu speaking, Q&A sessions, or defending an argument when put on the spot.</p>
-                    </div>
-                    <div>
-                        <h3 class="font-label-caps text-label-caps text-primary mb-2 uppercase tracking-widest">How to use</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant">State your thesis (P), explain why (R), provide evidence (E), and restate your thesis (P).</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- SCQA Framework -->
-            <article class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest flex flex-col">
-                <header class="mb-8">
-                    <h2 class="font-headline-md text-headline-md text-on-surface mb-2">SCQA</h2>
-                    <p class="font-label-caps text-label-caps text-on-surface-variant">Situation, Complication, Question, Answer</p>
-                </header>
-                <div class="hairline mb-8"></div>
-                <div class="flex-grow space-y-6">
-                    <div>
-                        <h3 class="font-label-caps text-label-caps text-primary mb-2 uppercase tracking-widest">When to use</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant">Executive presentations, business proposals, or framing a complex problem for stakeholders.</p>
-                    </div>
-                    <div>
-                        <h3 class="font-label-caps text-label-caps text-primary mb-2 uppercase tracking-widest">How to use</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant">Define the status quo (S), introduce the trigger event (C), articulate the dilemma (Q), and present your solution (A).</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- MECE Framework -->
-            <article class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest flex flex-col">
-                <header class="mb-8">
-                    <h2 class="font-headline-md text-headline-md text-on-surface mb-2">MECE</h2>
-                    <p class="font-label-caps text-label-caps text-on-surface-variant">Mutually Exclusive, Collectively Exhaustive</p>
-                </header>
-                <div class="hairline mb-8"></div>
-                <div class="flex-grow space-y-6">
-                    <div>
-                        <h3 class="font-label-caps text-label-caps text-primary mb-2 uppercase tracking-widest">When to use</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant">Problem-solving, categorizing data, or breaking down complex issues without overlap.</p>
-                    </div>
-                    <div>
-                        <h3 class="font-label-caps text-label-caps text-primary mb-2 uppercase tracking-widest">How to use</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant">Ensure your categories don't overlap and together cover all possible options without leaving gaps.</p>
-                    </div>
-                </div>
-            </article>
-
-            <!-- PPF Framework -->
-            <article class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest flex flex-col md:col-span-2 md:w-1/2 md:mx-auto">
-                <header class="mb-8">
-                    <h2 class="font-headline-md text-headline-md text-on-surface mb-2">PPF</h2>
-                    <p class="font-label-caps text-label-caps text-on-surface-variant">Past, Present, Future</p>
-                </header>
-                <div class="hairline mb-8"></div>
-                <div class="flex-grow space-y-6">
-                    <div>
-                        <h3 class="font-label-caps text-label-caps text-primary mb-2 uppercase tracking-widest">When to use</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant">Introductions, demonstrating trajectory, or providing historical context to a current decision.</p>
-                    </div>
-                    <div>
-                        <h3 class="font-label-caps text-label-caps text-primary mb-2 uppercase tracking-widest">How to use</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant">Acknowledge where you've been (P), state where you are now (P), and cast a vision for where you're going (F).</p>
-                    </div>
-                </div>
-            </article>
-        </div>
-    </main>
-
-    <footer class="bg-background border-t border-outline-variant mt-stack-lg">
-        <div class="flex flex-col md:flex-row justify-between items-center w-full px-margin-page py-stack-md max-w-container-max mx-auto gap-8 md:gap-0">
-            <div class="font-headline-md text-primary">Orator</div>
-            <div class="font-label-caps text-label-caps text-on-surface-variant">© Orator. The Vessel for Voice.</div>
-        </div>
-    </footer>
-</div>
-
-<!-- PAGE: JOURNAL -->
-<div id="journal-page" class="page">
-    <header class="hidden md:flex bg-background border-b border-outline-variant sticky top-0 z-50">
-        <div class="flex justify-between items-center w-full px-margin-page max-w-container-max mx-auto h-24">
-            <button onclick="goToPage('homepage')" class="font-headline-md text-primary tracking-tight">Orator</button>
-            <nav class="flex items-center gap-8">
-                <button onclick="goToPage('speak-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Speak</button>
-                <button onclick="goToPage('shadow-hub-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Shadow-Hub</button>
-                <button onclick="goToPage('frameworks-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Frameworks</button>
-                <button onclick="goToPage('journal-page')" class="font-label-caps text-label-caps text-primary border-b border-primary pb-1">Journal</button>
-            </nav>
-            <button onclick="goToPage('profile-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary">Profile</button>
-        </div>
-    </header>
-
-    <main class="max-w-container-max mx-auto px-gutter md:px-margin-page py-stack-lg min-h-screen flex flex-col">
-        <header class="mb-stack-lg text-center md:text-left max-w-3xl mx-auto md:mx-0">
-            <h1 class="font-display-lg-mobile md:font-display-lg text-3xl md:text-5xl mb-unit text-primary">Journal</h1>
-            <p class="font-body-lg text-body-lg text-on-surface-variant">Archive of your sessions. Reflections. Progress over time. Build a practice.</p>
-        </header>
-
-        <div id="journal-entries" class="space-y-8 border-t border-outline-variant pt-stack-md">
-            <!-- Entries will be populated here -->
-        </div>
-
-        <div id="empty-state" class="text-center py-stack-lg">
-            <p class="font-body-lg text-body-lg text-on-surface-variant mb-4">No entries yet. Start practicing to build your archive.</p>
-            <button onclick="goToPage('speak-page')" class="font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors border-b border-primary hover:border-on-surface pb-1">
-                Begin First Session
+<!-- PROFILE MODAL (Overlay) -->
+<div id="profile-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-gutter">
+    <div class="bg-surface border border-outline-variant rounded-lg max-w-md w-full p-8">
+        <div class="flex justify-between items-center mb-stack-md">
+            <h2 class="font-headline-md text-headline-md text-on-surface">Settings</h2>
+            <button onclick="toggleProfile()" class="text-on-surface-variant hover:text-primary">
+                <span class="material-symbols-outlined">close</span>
             </button>
         </div>
-    </main>
 
-    <footer class="bg-background border-t border-outline-variant mt-stack-lg">
-        <div class="flex flex-col md:flex-row justify-between items-center w-full px-margin-page py-stack-md max-w-container-max mx-auto gap-8 md:gap-0">
-            <div class="font-headline-md text-primary">Orator</div>
-            <div class="font-label-caps text-label-caps text-on-surface-variant">© Orator. The Vessel for Voice.</div>
+        <div class="space-y-6 border-t border-outline-variant pt-6">
+            <div>
+                <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest block mb-2">Name</label>
+                <p id="modal-name" class="font-body-lg text-on-surface"></p>
+            </div>
+
+            <div>
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" id="reminder-toggle" checked class="w-4 h-4 bg-primary border border-outline-variant rounded">
+                    <span class="font-body-md text-on-surface">Daily 9pm reminder</span>
+                </label>
+                <p class="font-body-md text-on-surface-variant text-xs mt-2">Get a reminder if you skip practice.</p>
+            </div>
+
+            <button onclick="logout()" class="w-full text-error font-label-caps text-label-caps py-2 border border-error hover:bg-error hover:text-background transition-colors uppercase tracking-widest">
+                Logout
+            </button>
         </div>
-    </footer>
-</div>
-
-<!-- PAGE: PROFILE -->
-<div id="profile-page" class="page">
-    <header class="hidden md:flex bg-background border-b border-outline-variant sticky top-0 z-50">
-        <div class="flex justify-between items-center w-full px-margin-page max-w-container-max mx-auto h-24">
-            <button onclick="goToPage('homepage')" class="font-headline-md text-primary tracking-tight">Orator</button>
-            <nav class="flex items-center gap-8">
-                <button onclick="goToPage('speak-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Speak</button>
-                <button onclick="goToPage('shadow-hub-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Shadow-Hub</button>
-                <button onclick="goToPage('frameworks-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Frameworks</button>
-                <button onclick="goToPage('journal-page')" class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Journal</button>
-            </nav>
-            <button class="font-label-caps text-label-caps text-primary border-b border-primary pb-1">Profile</button>
-        </div>
-    </header>
-
-    <main class="max-w-container-max mx-auto px-gutter md:px-margin-page py-stack-lg min-h-screen flex flex-col">
-        <header class="mb-stack-lg">
-            <h1 class="font-display-lg-mobile md:font-display-lg text-3xl md:text-5xl mb-unit text-primary">Settings</h1>
-        </header>
-
-        <div class="border-t border-outline-variant pt-stack-md max-w-2xl">
-            <section class="mb-stack-lg pb-stack-lg border-b border-outline-variant">
-                <h2 class="font-headline-md text-headline-md text-on-surface mb-6">Account</h2>
-                <div class="space-y-4">
-                    <div>
-                        <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest block mb-2">Name</label>
-                        <p id="profile-name" class="font-body-lg text-body-lg text-on-surface"></p>
-                    </div>
-                    <div>
-                        <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest block mb-2">Email</label>
-                        <p id="profile-email" class="font-body-lg text-body-lg text-on-surface"></p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="mb-stack-lg pb-stack-lg border-b border-outline-variant">
-                <h2 class="font-headline-md text-headline-md text-on-surface mb-6">Preferences</h2>
-                <div class="space-y-4">
-                    <label class="flex items-center gap-4 cursor-pointer">
-                        <input type="checkbox" id="reminder-toggle" checked class="w-4 h-4 bg-primary border border-outline-variant rounded cursor-pointer">
-                        <span class="font-body-md text-body-md text-on-surface">Daily reminder at 9pm (optional)</span>
-                    </label>
-                    <p class="font-body-md text-body-md text-on-surface-variant text-sm">We'll send you one email per day if you miss a practice session.</p>
-                </div>
-            </section>
-
-            <section>
-                <button onclick="logout()" class="font-label-caps text-label-caps text-error hover:text-on-surface transition-colors border border-error hover:border-on-surface px-4 py-2 uppercase tracking-widest">
-                    Logout
-                </button>
-            </section>
-        </div>
-    </main>
-
-    <footer class="bg-background border-t border-outline-variant mt-stack-lg">
-        <div class="flex flex-col md:flex-row justify-between items-center w-full px-margin-page py-stack-md max-w-container-max mx-auto gap-8 md:gap-0">
-            <div class="font-headline-md text-primary">Orator</div>
-            <div class="font-label-caps text-label-caps text-on-surface-variant">© Orator. The Vessel for Voice.</div>
-        </div>
-    </footer>
+    </div>
 </div>
 
 <script>
@@ -786,182 +458,145 @@
             { name: "Lupita Nyong'o", title: "My Story of Embracing My Dark Skin", duration: "07:53", youtubeId: "PfH8LoCWc98" },
             { name: "Adam Grant", title: "The Surprising Habits of Original Thinkers", duration: "15:42", youtubeId: "dQw4w9WgXcQ" },
             { name: "Diane Nyad", title: "Never Give Up", duration: "17:59", youtubeId: "iZu-tpzYhWc" },
-            { name: "Sasha Fierce", title: "The Power of Failure", duration: "12:34", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Jane McGonigal", title: "The Game That Can Give You 10 Extra Years of Life", duration: "18:34", youtubeId: "9rblH6sBF50" },
-            { name: "Asha George", title: "Finding Your Voice", duration: "13:21", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Mark Roth", title: "The Surprising Science of Shallow", duration: "17:15", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Sarah-Jayne Blakemore", title: "The Mysterious Workings of the Adolescent Brain", duration: "16:52", youtubeId: "CUtDbyuUx00" },
-            { name: "Ritesh Agarwal", title: "Building for the Next Billion Users", duration: "11:45", youtubeId: "dQw4w9WgXcQ" }
+            { name: "Jane McGonigal", title: "The Game That Can Give You 10 Extra Years", duration: "18:34", youtubeId: "9rblH6sBF50" },
+            { name: "Mark Roth", title: "Suspended Animation", duration: "17:15", youtubeId: "dQw4w9WgXcQ" },
+            { name: "Sarah-Jayne Blakemore", title: "The Adolescent Brain", duration: "16:52", youtubeId: "CUtDbyuUx00" },
+            { name: "Ritesh Agarwal", title: "Building for Next Billion Users", duration: "11:45", youtubeId: "dQw4w9WgXcQ" },
+            { name: "Audrey Tang", title: "Digital Collaboration & Inclusivity", duration: "19:22", youtubeId: "dQw4w9WgXcQ" },
+            { name: "Fei-Fei Li", title: "The Humanity of Artificial Intelligence", duration: "14:17", youtubeId: "dQw4w9WgXcQ" }
         ],
         medium: [
             { name: "Chris Anderson", title: "TED and the Power of Stories", duration: "15:24", youtubeId: "dQw4w9WgXcQ" },
             { name: "Jason Fried", title: "Why Work Doesn't Happen at Work", duration: "16:26", youtubeId: "5XD2kq3ZfYw" },
             { name: "Mihaly Csikszentmihalyi", title: "Flow, The Secret to Happiness", duration: "18:33", youtubeId: "fXIeFJCqsPs" },
-            { name: "Richard Feynman", title: "The Joy of Finding Things Out", duration: "14:13", youtubeId: "dQw4w9WgXcQ" },
             { name: "Dan Pink", title: "The Puzzle of Motivation", duration: "18:36", youtubeId: "rrkrvAUbU9Y" },
-            { name: "Jonathan Haidt", title: "The Moral Roots of Liberals and Conservatives", duration: "19:41", youtubeId: "vs41JrnGaxc" },
+            { name: "Jonathan Haidt", title: "The Moral Roots", duration: "19:41", youtubeId: "vs41JrnGaxc" },
             { name: "Jill Bolte Taylor", title: "My Stroke of Insight", duration: "18:41", youtubeId: "UyyjU8fzEYU" },
             { name: "Barry Schwartz", title: "The Paradox of Choice", duration: "21:17", youtubeId: "VO6XEQIsCoM" },
             { name: "Seth Godin", title: "The Tribes We Lead", duration: "18:36", youtubeId: "xnKZst-U2ww" },
             { name: "Aubrey de Grey", title: "A Road Map to End Aging", duration: "23:35", youtubeId: "AvWtSUdOWVI" },
             { name: "Sherry Turkle", title: "Connected, But Alone?", duration: "19:47", youtubeId: "t3m0bVool5g" },
             { name: "Pattie Maes", title: "Unveiling the Sixth Sense", duration: "12:10", youtubeId: "YrtANr8G0bc" },
-            { name: "Jeff Han", title: "The Radical Power of Tablets", duration: "04:49", youtubeId: "ac18-uKc9ZA" },
-            { name: "Tan France", title: "Inside the Mind of a Master Procrastinator", duration: "14:04", youtubeId: "arj7oStGLkU" },
+            { name: "Tan France", title: "The Joy of Fashion & Style", duration: "14:04", youtubeId: "arj7oStGLkU" },
             { name: "Amanda Palmer", title: "The Art of Asking", duration: "12:42", youtubeId: "xDYbF221X8w" },
-            { name: "Chris Hadfield", title: "What I Learned from Going Blind in Space", duration: "16:14", youtubeId: "qP9rS3K8b3U" },
+            { name: "Chris Hadfield", title: "An Astronaut's View of Earth", duration: "16:14", youtubeId: "qP9rS3K8b3U" },
             { name: "Meg Jay", title: "Why 30 is Not the New 20", duration: "15:21", youtubeId: "k7X7sZzSXYs" },
-            { name: "Paul Bloom", title: "The Psychology of Everyday Reasoning", duration: "17:46", youtubeId: "dQw4w9WgXcQ" },
             { name: "Susan David", title: "The Gift and Power of Emotional Courage", duration: "16:54", youtubeId: "ndVrFchMOAU" },
-            { name: "Priya Parker", title: "How to Build Belonging", duration: "14:25", youtubeId: "dQw4w9WgXcQ" }
+            { name: "Priya Parker", title: "How to Build Belonging", duration: "14:25", youtubeId: "dQw4w9WgXcQ" },
+            { name: "Celeste Headlee", title: "We Need to Talk", duration: "11:47", youtubeId: "dQw4w9WgXcQ" },
+            { name: "Sheryl Sandberg", title: "Option B", duration: "15:48", youtubeId: "dQw4w9WgXcQ" },
+            { name: "Ryan Tedder", title: "The Making of Viral Music", duration: "13:22", youtubeId: "dQw4w9WgXcQ" }
         ],
         advanced: [
             { name: "Yuval Noah Harari", title: "What Explains the Rise of Humans?", duration: "18:33", youtubeId: "nzj7Wg4DAbs" },
-            { name: "Steven Pinker", title: "Is the World Getting Better or Worse?", duration: "19:27", youtubeId: "5U0fF1Aj-k0" },
-            { name: "Slavoj Žižek", title: "The Ongoing Struggle Against Ideology", duration: "30:38", youtubeId: "n0H6CLbCYGY" },
+            { name: "Steven Pinker", title: "The Better Angels of Our Nature", duration: "19:27", youtubeId: "5U0fF1Aj-k0" },
             { name: "Deepak Chopra", title: "The Future of Medicine", duration: "20:38", youtubeId: "TvzZo6XiFl8" },
-            { name: "Gloria Steinem", title: "A Woman Without a Man is Like a Fish Without a Bicycle", duration: "14:00", youtubeId: "dQw4w9WgXcQ" },
             { name: "Neil deGrasse Tyson", title: "We Stopped Dreaming", duration: "07:31", youtubeId: "CbIZU8cQWXc" },
-            { name: "Daniel Kahneman", title: "The Riddle of Experience vs. Memory", duration: "20:19", youtubeId: "XpNPCeZ0eZs" },
-            { name: "Nassim Taleb", title: "Black Swan Events", duration: "15:17", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Eric Ries", title: "How to Build a Lean Startup", duration: "19:47", youtubeId: "dQw4w9WgXcQ" },
+            { name: "Daniel Kahneman", title: "The Riddle of Experience vs Memory", duration: "20:19", youtubeId: "XpNPCeZ0eZs" },
+            { name: "Eric Ries", title: "The Lean Startup", duration: "19:47", youtubeId: "dQw4w9WgXcQ" },
             { name: "Yochai Benkler", title: "The New Open-Source Economics", duration: "18:26", youtubeId: "dQw4w9WgXcQ" },
             { name: "Richard Dawkins", title: "Militant Atheism", duration: "30:53", youtubeId: "dQw4w9WgXcQ" },
             { name: "Sam Harris", title: "Science Can Answer Moral Questions", duration: "14:31", youtubeId: "Hj9oB4zpHww" },
             { name: "Benjamin Barber", title: "America's Uncivil Wars", duration: "18:35", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Clay Shirky", title: "How Cognitive Surplus Will Change the World", duration: "12:47", youtubeId: "Sr6R2rYUFZk" },
+            { name: "Clay Shirky", title: "How Cognitive Surplus Changes the World", duration: "12:47", youtubeId: "Sr6R2rYUFZk" },
             { name: "Ramachandran", title: "The Neurons That Shaped Civilization", duration: "17:57", youtubeId: "dQw4w9WgXcQ" },
             { name: "Hans Rosling", title: "Stats That Reshape Your Worldview", duration: "19:50", youtubeId: "hVimVzgtD6w" },
-            { name: "Jamie Kennedy", title: "Rethinking Consciousness", duration: "21:02", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Diane Arbus", title: "Photography and the Art of Seeing", duration: "13:45", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Susan Sontag", title: "On Beauty and Photography", duration: "25:13", youtubeId: "dQw4w9WgXcQ" },
-            { name: "David Foster Wallace", title: "Tending the Garden of Your Mind", duration: "22:45", youtubeId: "dQw4w9WgXcQ" }
+            { name: "Angela Lee Duckworth", title: "Grit: The Power of Passion and Perseverance", duration: "06:12", youtubeId: "H14bBuluwB8" },
+            { name: "Alain de Botton", title: "On Possessions", duration: "12:17", youtubeId: "dQw4w9WgXcQ" },
+            { name: "Marina Abramović", title: "An Artist on the Frontline of Change", duration: "15:46", youtubeId: "dQw4w9WgXcQ" },
+            { name: "Brené Brown", title: "Listening to Shame", duration: "19:47", youtubeId: "psN1DORYYV0" },
+            { name: "Paul Bloom", title: "The Psychology of Everyday Reasoning", duration: "17:46", youtubeId: "dQw4w9WgXcQ" },
+            { name: "David Foster Wallace", title: "Consider the Lobster", duration: "27:15", youtubeId: "dQw4w9WgXcQ" },
+            { name: "Cornel West", title: "On Black Prophetic Tradition", duration: "32:10", youtubeId: "dQw4w9WgXcQ" }
         ]
     };
 
+    const topicPrompts = [
+        "Why should people learn to cook?",
+        "What's the future of remote work?",
+        "How does social media affect mental health?",
+        "Why is reading important in the digital age?",
+        "What makes a good mentor?",
+        "How can we reduce food waste?",
+        "What's the value of failure?",
+        "How do you define success?",
+        "Why should businesses prioritize sustainability?",
+        "What role does creativity play in problem-solving?",
+        "How has technology changed education?",
+        "Why is emotional intelligence important?",
+        "What makes a strong team?",
+        "How can we improve public transportation?",
+        "Why should everyone learn a language?",
+        "What's the importance of sleep?",
+        "How do you build trust with others?",
+        "Why should we invest in space exploration?",
+        "How can we combat loneliness?",
+        "What makes a powerful story?"
+    ];
+
     let currentUser = null;
-    let currentSpeaker = null;
-    let recordingState = { isRecording: false, startTime: null, timerInterval: null };
+    let currentMode = 'dark';
 
     // INITIALIZATION
     function init() {
         loadUser();
-        setCurrentDate();
-        setupOnboardingOptions();
+        applyTheme();
         renderSpeakers('easy');
+        renderJournal();
     }
 
     function loadUser() {
         const user = JSON.parse(localStorage.getItem('orator_user'));
         if (user) {
             currentUser = user;
-            goToPage('homepage');
-            updateGreeting();
-            updateProfile();
+            goToDashboard();
         }
     }
 
-    function setCurrentDate() {
-        const dateEl = document.getElementById('current-date');
-        if (dateEl) {
-            const options = { weekday: 'long', month: 'long', day: 'numeric' };
-            dateEl.textContent = new Date().toLocaleDateString('en-US', options);
-        }
+    function submitName() {
+        const name = document.getElementById('user-name-input').value.trim();
+        if (!name) return alert('Please enter your name');
+
+        currentUser = { name, createdAt: new Date().toISOString() };
+        localStorage.setItem('orator_user', JSON.stringify(currentUser));
+        
+        document.getElementById('greeting-name').textContent = `Hello, ${name}`;
+        goToDashboard();
     }
 
-    function updateGreeting() {
-        const hour = new Date().getHours();
-        let greeting = 'Good morning';
-        if (hour >= 12 && hour < 18) greeting = 'Good afternoon';
-        else if (hour >= 18) greeting = 'Good evening';
-
-        document.getElementById('greeting-text').textContent = greeting + ',';
-        document.getElementById('greeting-name').textContent = currentUser.name || 'there';
+    function goToDashboard() {
+        document.getElementById('name-page').classList.remove('active');
+        document.getElementById('dashboard-page').classList.add('active');
+        document.getElementById('modal-name').textContent = currentUser.name;
     }
 
-    function updateProfile() {
-        document.getElementById('profile-name').textContent = currentUser.name;
-        document.getElementById('profile-email').textContent = currentUser.email;
-    }
-
-    // PAGE NAVIGATION
     function goToPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
-        if (pageId === 'homepage') {
-            setCurrentDate();
-            updateGreeting();
-        }
         window.scrollTo(0, 0);
     }
 
-    // ONBOARDING FLOW
-    function goToOnboarding() {
-        const email = document.getElementById('signup-email').value;
-        if (!email) return alert('Please enter your email');
-        localStorage.setItem('orator_email', email);
-        goToPage('onboarding-page');
-    }
-
-    function setupOnboardingOptions() {
-        document.querySelectorAll('.option-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const parent = this.closest('.step-content');
-                parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-                this.querySelector('div').style.backgroundColor = '#e9c176';
-                this.querySelector('div').style.borderColor = '#e9c176';
-            });
-        });
-    }
-
-    function nextStep(step) {
-        const currentEl = document.getElementById(`step-${step}`);
-        const nextEl = document.getElementById(`step-${step + 1}`);
-
-        if (step === 1) {
-            const name = document.getElementById('onboard-name').value;
-            if (!name.trim()) return alert('Please enter your name');
-            localStorage.setItem('orator_user_name', name);
-        }
-
-        currentEl.style.opacity = '0';
-        currentEl.style.transform = 'translateY(-10px)';
+    function switchSection(sectionName) {
+        // Hide all sections
+        document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
         
-        setTimeout(() => {
-            currentEl.classList.add('hidden');
-            nextEl.classList.remove('hidden');
-            nextEl.style.opacity = '0';
-            nextEl.offsetWidth; // Reflow
-            nextEl.style.opacity = '1';
-            nextEl.style.transform = 'translateY(0)';
-            const progress = ((step + 1) / 4) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
-        }, 300);
+        // Hide welcome banner
+        document.getElementById('welcome-banner').classList.add('hidden');
+
+        // Update nav buttons
+        document.querySelectorAll('.nav-section').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`nav-${sectionName}`).classList.add('active');
+
+        // Show selected section
+        document.getElementById(`${sectionName}-section`).classList.remove('hidden');
+
+        window.scrollTo(0, 0);
     }
 
-    function finishOnboarding() {
-        const name = localStorage.getItem('orator_user_name');
-        const email = localStorage.getItem('orator_email');
-        const user = { name, email, createdAt: new Date().toISOString() };
-        localStorage.setItem('orator_user', JSON.stringify(user));
-        currentUser = user;
-        goToPage('homepage');
-        updateGreeting();
-        updateProfile();
-    }
-
-    // SHADOW-HUB FUNCTIONS
+    // SPEAKERS FUNCTIONS
     function filterSpeakers(difficulty) {
-        document.querySelectorAll('#filter-easy, #filter-medium, #filter-advanced').forEach(btn => {
-            btn.classList.remove('selected-filter');
-            btn.style.borderColor = '#4e4639';
-            btn.style.color = '#d1c5b4';
-        });
-        const btn = document.getElementById(`filter-${difficulty}`);
-        btn.classList.add('selected-filter');
-        btn.style.borderColor = '#e9c176';
-        btn.style.color = '#e9c176';
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`filter-${difficulty}`).classList.add('active');
         renderSpeakers(difficulty);
     }
 
@@ -970,85 +605,87 @@
         grid.innerHTML = '';
         speakers[difficulty].forEach(speaker => {
             const card = document.createElement('div');
-            card.className = 'border border-outline-variant hover:border-primary hover-lift transition-all p-8 bg-surface-container-lowest cursor-pointer';
+            card.className = 'border border-outline-variant hover:border-primary hover-lift transition-all p-8 bg-surface-container-lowest rounded-lg cursor-pointer';
             card.innerHTML = `
                 <span class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-2 inline-block">${difficulty}</span>
                 <h3 class="font-headline-md text-headline-md text-on-surface mb-1">${speaker.name}</h3>
                 <p class="font-body-md text-body-md text-on-surface-variant mb-4">${speaker.title} • ${speaker.duration}</p>
-                <div class="flex items-center gap-2 text-on-surface hover:text-primary transition-colors font-label-caps text-label-caps">
-                    Watch & Practice <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                </div>
+                <a href="https://www.youtube.com/watch?v=${speaker.youtubeId}" target="_blank" class="inline-flex items-center gap-2 text-on-surface hover:text-primary transition-colors font-label-caps text-label-caps">
+                    Watch <span class="material-symbols-outlined text-sm">open_in_new</span>
+                </a>
             `;
-            card.onclick = () => openSpeaker(speaker, difficulty);
             grid.appendChild(card);
         });
     }
 
-    function openSpeaker(speaker, difficulty) {
-        currentSpeaker = speaker;
-        document.getElementById('speaker-difficulty').textContent = difficulty.toUpperCase();
-        document.getElementById('speaker-name').textContent = speaker.name;
-        document.getElementById('speaker-title').textContent = speaker.title + ' • ' + speaker.duration;
-        document.getElementById('speaker-video').src = `https://www.youtube.com/embed/${speaker.youtubeId}`;
-        resetRecording();
-        goToPage('speaker-detail-page');
+    // TOPICS FUNCTION
+    function spinTopic() {
+        const randomTopic = topicPrompts[Math.floor(Math.random() * topicPrompts.length)];
+        document.getElementById('generated-topic').textContent = randomTopic;
+        document.getElementById('topic-display').classList.remove('hidden');
     }
 
-    // RECORDING FUNCTIONS
-    function startRecording() {
-        recordingState.isRecording = true;
-        recordingState.startTime = Date.now();
-        document.getElementById('recording-status').classList.add('hidden');
-        document.getElementById('recording-timer').classList.remove('hidden');
-        
-        recordingState.timerInterval = setInterval(() => {
-            const elapsed = Math.floor((Date.now() - recordingState.startTime) / 1000);
-            const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
-            const secs = String(elapsed % 60).padStart(2, '0');
-            document.getElementById('timer-display').textContent = `${mins}:${secs}`;
-        }, 100);
+    function closeTopic() {
+        document.getElementById('topic-display').classList.add('hidden');
     }
 
-    function stopRecording() {
-        recordingState.isRecording = false;
-        clearInterval(recordingState.timerInterval);
-        const elapsed = Math.floor((Date.now() - recordingState.startTime) / 1000);
-        
-        // Save to journal
-        const entry = {
-            id: Date.now(),
-            speaker: currentSpeaker.name,
-            date: new Date().toISOString(),
-            duration: elapsed,
-            reflection: ''
-        };
+    // JOURNAL RENDERING
+    function renderJournal() {
         const entries = JSON.parse(localStorage.getItem('orator_journal') || '[]');
-        entries.unshift(entry);
-        localStorage.setItem('orator_journal', JSON.stringify(entries));
+        const container = document.getElementById('journal-entries');
+        
+        if (entries.length === 0) {
+            document.getElementById('empty-journal').classList.remove('hidden');
+            container.innerHTML = '';
+            return;
+        }
 
-        document.getElementById('recording-timer').classList.add('hidden');
-        document.getElementById('recording-saved').classList.remove('hidden');
+        document.getElementById('empty-journal').classList.add('hidden');
+        container.innerHTML = entries.map(entry => `
+            <div class="border border-outline-variant p-8 bg-surface-container-lowest rounded-lg">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">${entry.speaker || 'Session'}</p>
+                        <p class="font-body-md text-body-md text-on-surface-variant">${new Date(entry.date).toLocaleDateString()}</p>
+                    </div>
+                    <p class="font-body-md text-body-md text-primary">${Math.floor(entry.duration / 60)}:${String(entry.duration % 60).padStart(2, '0')}</p>
+                </div>
+                ${entry.reflection ? `<p class="font-body-md text-on-surface">${entry.reflection}</p>` : ''}
+            </div>
+        `).join('');
     }
 
-    function resetRecording() {
-        recordingState.isRecording = false;
-        clearInterval(recordingState.timerInterval);
-        document.getElementById('recording-status').classList.remove('hidden');
-        document.getElementById('recording-timer').classList.add('hidden');
-        document.getElementById('recording-saved').classList.add('hidden');
-        document.getElementById('timer-display').textContent = '00:00';
+    // DARK/LIGHT MODE
+    function toggleDarkMode() {
+        currentMode = currentMode === 'dark' ? 'light' : 'dark';
+        applyTheme();
+        localStorage.setItem('orator_theme', currentMode);
     }
 
-    // PROFILE & LOGOUT
+    function applyTheme() {
+        const savedTheme = localStorage.getItem('orator_theme') || 'dark';
+        currentMode = savedTheme;
+        document.documentElement.classList.toggle('dark', currentMode === 'dark');
+        document.documentElement.classList.toggle('light', currentMode === 'light');
+        document.body.classList.toggle('dark', currentMode === 'dark');
+        document.body.classList.toggle('light', currentMode === 'light');
+        document.getElementById('theme-icon').textContent = currentMode === 'dark' ? 'light_mode' : 'dark_mode';
+    }
+
+    // PROFILE MODAL
+    function toggleProfile() {
+        document.getElementById('profile-modal').classList.toggle('hidden');
+    }
+
     function logout() {
         localStorage.removeItem('orator_user');
+        document.getElementById('profile-modal').classList.add('hidden');
         currentUser = null;
-        goToPage('landing-page');
-        document.getElementById('signup-email').value = '';
-        document.getElementById('onboard-name').value = '';
+        goToPage('name-page');
+        document.getElementById('user-name-input').value = '';
     }
 
-    // Initialize on load
+    // Initialize
     document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
