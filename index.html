@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    
+
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -16,55 +16,16 @@
                 extend: {
                     colors: {
                         "on-surface-variant": "#d1c5b4",
-                        "primary-container": "#c5a059",
                         "background": "#121414",
                         "on-surface": "#e2e2e2",
-                        "surface-container": "#1e2020",
-                        "surface": "#121414",
-                        "surface-bright": "#38393a",
-                        "outline-variant": "#4e4639",
-                        "on-tertiary": "#173059",
-                        "outline": "#9a8f80",
-                        "surface-container-highest": "#333535",
-                        "surface-variant": "#333535",
-                        "primary": "#e9c176",
-                        "tertiary": "#b0c6f9",
-                        "surface-container-low": "#1a1c1c",
                         "surface-container-lowest": "#0c0f0f",
-                        // Light mode colors
-                        "light-bg": "#f8f8f6",
-                        "light-surface": "#ffffff",
-                        "light-text": "#1a1a1a",
-                        "light-text-variant": "#666666",
-                        "light-border": "#e0e0e0",
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.25rem",
-                        lg: "0.5rem",
+                        "outline-variant": "#4e4639",
+                        "primary": "#e9c176",
                     },
                     spacing: {
-                        "container-max": "1040px",
                         "gutter": "32px",
-                        "stack-md": "40px",
                         "stack-lg": "80px",
                         "margin-page": "64px",
-                        "unit": "8px",
-                    },
-                    fontFamily: {
-                        "label-caps": ["Inter"],
-                        "body-md": ["Inter"],
-                        "display-lg": ["Playfair Display"],
-                        "headline-md": ["Playfair Display"],
-                        "display-lg-mobile": ["Playfair Display"],
-                        "body-lg": ["Inter"],
-                    },
-                    fontSize: {
-                        "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "600" }],
-                        "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
-                        "display-lg": ["64px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "400" }],
-                        "headline-md": ["32px", { lineHeight: "1.3", fontWeight: "400" }],
-                        "display-lg-mobile": ["40px", { lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "400" }],
-                        "body-lg": ["18px", { lineHeight: "1.7", letterSpacing: "0.01em", fontWeight: "400" }],
                     },
                 },
             },
@@ -72,442 +33,351 @@
     </script>
 
     <style>
+        * { box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; }
+
+        html.light { color-scheme: light; }
+        html.dark { color-scheme: dark; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        html.light body { background-color: #f8f8f6; color: #1a1a1a; }
+        html.dark body { background-color: #121414; color: #e2e2e2; }
+
+        html.light .hairline, html.light .border-outline { border-color: #e0e0e0 !important; }
+        html.dark .hairline, html.dark .border-outline { border-color: #4e4639 !important; }
+        html.light .text-muted { color: #666666 !important; }
+        html.dark .text-muted { color: #d1c5b4 !important; }
+        html.light .bg-dark { background-color: #ffffff !important; }
+        html.dark .bg-dark { background-color: #0c0f0f !important; }
+
+        .font-serif { font-family: 'Playfair Display', serif; }
+
         .material-symbols-outlined {
             font-family: 'Material Symbols Outlined';
             font-weight: normal;
             font-style: normal;
             line-height: 1;
-            letter-spacing: normal;
-            text-transform: none;
-            display: inline-block;
-            white-space: nowrap;
-            word-wrap: normal;
-            direction: ltr;
-            -webkit-font-feature-settings: 'liga';
-            -webkit-font-smoothing: antialiased;
         }
 
-        * { box-sizing: border-box; }
-        
-        body {
-            transition: background-color 0.3s, color 0.3s;
+        /* --- name entry stage --- */
+        #stage-entry {
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
-
-        body.light {
-            background-color: #f8f8f6;
-            color: #1a1a1a;
-        }
-
-        body.dark {
-            background-color: #121414;
-            color: #e2e2e2;
-        }
-
-        .fade-in-up {
+        #stage-entry.leaving {
             opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.8s ease-out forwards;
+            transform: translateY(-12px) scale(0.98);
         }
 
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        #brand-hero {
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #brand-hero.leaving {
+            opacity: 0;
+            transform: scale(0.8);
         }
 
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
+        #brand-mini {
+            opacity: 0;
+            transition: opacity 0.6s ease 0.15s;
+        }
+        #brand-mini.arrived { opacity: 0.55; }
 
-        .page { display: none; }
-        .page.active { display: block; }
+        #top-right {
+            opacity: 0;
+            transition: opacity 0.6s ease 0.25s;
+        }
+        #top-right.arrived { opacity: 1; }
 
-        .hairline { height: 1px; background-color: #4e4639; }
-        body.light .hairline { background-color: #e0e0e0; }
+        #stage-nav {
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+        }
+        #stage-nav.arrived { opacity: 1; transform: translateY(0); }
+
+        #content-zone {
+            opacity: 0;
+            transition: opacity 0.5s ease 0.3s;
+        }
+        #content-zone.arrived { opacity: 1; }
+
+        /* --- nav tabs --- */
+        .tab-btn {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--tab-inactive, #8a8577);
+            font-size: clamp(19px, 4.4vw, 28px);
+            opacity: 0.7;
+            transition: font-size 0.3s cubic-bezier(0.4,0,0.2,1), color 0.3s ease, opacity 0.3s ease;
+        }
+        html.dark .tab-btn { color: #d1c5b4; }
+        html.light .tab-btn { color: #666666; }
+        .tab-btn:hover { opacity: 1; }
+        .tab-btn.active {
+            color: #e9c176 !important;
+            opacity: 1;
+            font-size: clamp(27px, 6.2vw, 40px);
+        }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        #content-zone.mode-fixed { overflow: hidden; }
+        #content-zone.mode-scroll { overflow-y: auto; }
+
+        input#user-name-input.error {
+            animation: shake 0.4s ease;
+            border-color: #d97757 !important;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
 
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #4e4639; border-radius: 3px; }
-        body.light ::-webkit-scrollbar-thumb { background: #d0d0d0; }
-
-        .nav-section {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .nav-section:hover {
-            opacity: 0.8;
-        }
-
-        .nav-section.active {
-            color: #e9c176;
-            border-bottom: 3px solid #e9c176;
-        }
-
-        .hover-lift:hover { 
-            transform: translateY(-2px); 
-            transition: transform 0.3s ease; 
-        }
     </style>
 </head>
-<body class="dark antialiased selection:bg-primary">
+<body class="antialiased">
 
-<!-- PAGE: NAME INPUT (INITIAL LANDING) -->
-<div id="name-page" class="page active min-h-screen flex flex-col items-center justify-center px-gutter py-stack-lg">
-    <div class="w-full max-w-md text-center">
-        <div class="mb-stack-lg">
-            <h1 class="font-display-lg text-5xl text-primary mb-unit">Orator</h1>
-            <p class="font-body-md text-on-surface-variant italic">A studio for deliberate speaking.</p>
+<div id="app" class="h-full flex flex-col">
+
+    <!-- TOP BAR -->
+    <header class="flex-shrink-0 flex justify-between items-center px-gutter md:px-margin-page py-6">
+        <h1 id="brand-mini" class="font-serif text-2xl text-primary">Orator</h1>
+        <div id="top-right" class="flex items-center gap-5">
+            <span id="user-chip" class="font-serif italic text-muted text-sm"></span>
+            <button onclick="toggleTheme()" class="text-muted hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-xl" id="theme-icon">light_mode</span>
+            </button>
         </div>
+    </header>
 
-        <div class="hairline my-stack-md"></div>
+    <!-- HERO / NAV ZONE -->
+    <div class="flex-shrink-0 flex flex-col items-center text-center px-gutter">
 
-        <div class="mb-stack-lg text-left">
-            <h2 class="font-headline-md text-headline-md text-on-surface mb-8">What should we call you?</h2>
-            <input type="text" id="user-name-input" placeholder="Enter your name" class="w-full bg-transparent border-0 border-b border-outline-variant py-3 text-body-md placeholder-on-surface-variant/50 focus:border-primary focus:outline-none transition-colors">
-        </div>
+        <!-- pre-login hero title -->
+        <h1 id="brand-hero" class="font-serif text-6xl text-primary mb-3">Orator</h1>
 
-        <button onclick="submitName()" class="w-full bg-primary text-background font-label-caps text-label-caps py-3 uppercase tracking-widest hover:bg-primary-container transition-colors">
-            Continue
-        </button>
+        <!-- NAME ENTRY STAGE -->
+        <div id="stage-entry" class="w-full max-w-md">
+            <p id="tagline" class="text-muted italic mb-14">A studio for deliberate speaking.</p>
 
-        <p class="font-body-md text-on-surface-variant text-xs mt-stack-md">No account required. Start practicing immediately.</p>
-    </div>
-</div>
+            <div class="border-b border-outline-variant mb-14"></div>
 
-<!-- PAGE: MAIN DASHBOARD -->
-<div id="dashboard-page" class="page min-h-screen flex flex-col">
-    <!-- Top Navigation Bar -->
-    <nav class="bg-background border-b border-outline-variant sticky top-0 z-40 py-6 px-gutter md:px-margin-page">
-        <div class="max-w-container-max mx-auto flex items-center justify-between">
-            <!-- Large Section Buttons -->
-            <div class="flex gap-8 items-center flex-wrap">
-                <button onclick="switchSection('speak')" class="nav-section active" id="nav-speak">Speak</button>
-                <button onclick="switchSection('shadow-hub')" class="nav-section" id="nav-shadow-hub">Shadow-Hub</button>
-                <button onclick="switchSection('frameworks')" class="nav-section" id="nav-frameworks">Frameworks</button>
-                <button onclick="switchSection('journal')" class="nav-section" id="nav-journal">Journal</button>
+            <div class="mb-10">
+                <h2 class="text-4xl font-serif text-on-surface mb-8">What should we call you?</h2>
+                <input type="text" id="user-name-input" placeholder="Enter your name" autofocus
+                       onkeydown="if(event.key==='Enter') submitName()"
+                       class="w-full bg-transparent border-0 border-b border-outline-variant py-3 text-center text-lg placeholder-muted/50 focus:border-primary focus:outline-none transition-colors">
             </div>
 
-            <!-- Top Right: Dark/Light Toggle + Profile -->
-            <div class="flex items-center gap-4">
-                <button onclick="toggleDarkMode()" class="text-on-surface-variant hover:text-primary transition-colors">
-                    <span class="material-symbols-outlined" id="theme-icon">light_mode</span>
-                </button>
-                <button onclick="toggleProfile()" class="text-on-surface-variant hover:text-primary transition-colors">
-                    <span class="material-symbols-outlined">account_circle</span>
-                </button>
-            </div>
-        </div>
-    </nav>
+            <button onclick="submitName()" class="w-full bg-primary text-background font-semibold py-3 uppercase tracking-widest text-sm hover:bg-opacity-90 transition-all">
+                Continue
+            </button>
 
-    <!-- Welcome Greeting (only visible on first load) -->
-    <div id="welcome-banner" class="bg-surface-container-lowest border-b border-outline-variant px-gutter md:px-margin-page py-stack-md fade-in-up">
-        <div class="max-w-container-max mx-auto">
-            <h1 class="font-display-lg-mobile md:font-display-lg text-3xl md:text-5xl text-on-surface">
-                <span class="text-primary italic" id="greeting-name">Hello, there</span>!
-            </h1>
-            <p class="font-body-lg text-on-surface-variant mt-2">Choose a section to begin.</p>
+            <p class="text-muted text-xs mt-8">No account required. Start practicing immediately.</p>
         </div>
+
+        <!-- DASHBOARD NAV (replaces tagline / entry stage after login) -->
+        <nav id="stage-nav" class="w-full flex flex-wrap items-baseline justify-center gap-x-8 gap-y-2 pb-8">
+            <button class="tab-btn active" data-tab="home" onclick="switchTab('home')">Home</button>
+            <button class="tab-btn" data-tab="speak" onclick="switchTab('speak')">Speak</button>
+            <button class="tab-btn" data-tab="shadow-hub" onclick="switchTab('shadow-hub')">Shadow-Hub</button>
+            <button class="tab-btn" data-tab="frameworks" onclick="switchTab('frameworks')">Frameworks</button>
+            <button class="tab-btn" data-tab="journal" onclick="switchTab('journal')">Journal</button>
+        </nav>
     </div>
 
-    <!-- Main Content Area -->
-    <main class="flex-grow px-gutter md:px-margin-page py-stack-lg">
-        <div class="max-w-container-max mx-auto">
-            <!-- SPEAK SECTION -->
-            <section id="speak-section" class="section-content">
-                <header class="mb-stack-lg">
-                    <h2 class="font-headline-md text-headline-md text-on-surface mb-4">Speak</h2>
-                    <p class="font-body-lg text-body-lg text-on-surface-variant">Practice impromptu speaking. Random topics. Real-time thinking. No preparation.</p>
-                </header>
+    <!-- CONTENT ZONE -->
+    <main id="content-zone" class="flex-1 min-h-0 mode-fixed flex flex-col items-center justify-center px-gutter md:px-margin-page pb-10">
 
-                <!-- Device Prep Instructions -->
-                <div class="border border-outline-variant bg-surface-container-lowest p-8 mb-stack-lg rounded-lg">
-                    <h3 class="font-headline-md text-headline-md text-on-surface mb-4">Get Ready</h3>
-                    <ul class="space-y-3">
-                        <li class="flex gap-3">
-                            <span class="text-primary font-bold flex-shrink-0">→</span>
-                            <p class="font-body-md text-on-surface-variant"><strong>Find a quiet space.</strong> Minimize distractions.</p>
-                        </li>
-                        <li class="flex gap-3">
-                            <span class="text-primary font-bold flex-shrink-0">→</span>
-                            <p class="font-body-md text-on-surface-variant"><strong>Position your device.</strong> Phone or laptop, steady and facing you. Video recommended.</p>
-                        </li>
-                        <li class="flex gap-3">
-                            <span class="text-primary font-bold flex-shrink-0">→</span>
-                            <p class="font-body-md text-on-surface-variant"><strong>Test audio.</strong> Make sure you can be heard clearly.</p>
-                        </li>
-                        <li class="flex gap-3">
-                            <span class="text-primary font-bold flex-shrink-0">→</span>
-                            <p class="font-body-md text-on-surface-variant"><strong>Ready?</strong> Hit "Spin a Topic" to begin. You'll have 2 minutes.</p>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Two Practice Modes -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Impromptu Mode -->
-                    <article class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg">
-                        <h3 class="font-headline-md text-headline-md text-on-surface mb-4">Impromptu</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant mb-8">Totally random prompts. Think and speak without a net. 2 minutes. One topic. Go.</p>
-                        <a href="https://www.unprompted.cool/" target="_blank" class="inline-flex items-center gap-2 font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors border-b border-primary hover:border-on-surface pb-1">
-                            Open Studio <span class="material-symbols-outlined text-sm">open_in_new</span>
-                        </a>
-                    </article>
-
-                    <!-- Spin a Topic Mode -->
-                    <article class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg">
-                        <h3 class="font-headline-md text-headline-md text-on-surface mb-4">Spin a Topic</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant mb-8">Get a random prompt. Record yourself on your device. No pressure to share.</p>
-                        <button onclick="spinTopic()" class="inline-flex items-center gap-2 font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors border-b border-primary hover:border-on-surface pb-1">
-                            Generate Topic <span class="material-symbols-outlined text-sm">refresh</span>
-                        </button>
-                    </article>
-                </div>
-
-                <!-- Topic Display (hidden initially) -->
-                <div id="topic-display" class="hidden mt-stack-lg">
-                    <div class="border-l-4 border-primary bg-surface-container-lowest p-8 rounded-lg">
-                        <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-4">Your Topic</p>
-                        <h3 class="font-display-lg-mobile text-3xl text-on-surface mb-6" id="generated-topic"></h3>
-                        <p class="font-body-md text-on-surface-variant mb-6">You have 2 minutes. Start when ready. Record on your device.</p>
-                        <div class="flex gap-4">
-                            <button onclick="spinTopic()" class="border border-outline-variant text-on-surface px-6 py-2 font-label-caps text-label-caps uppercase hover:border-primary hover:text-primary transition-colors">
-                                New Topic
-                            </button>
-                            <button onclick="closeTopic()" class="bg-primary text-background px-6 py-2 font-label-caps text-label-caps uppercase hover:bg-primary-container transition-colors">
-                                Done
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SHADOW-HUB SECTION -->
-            <section id="shadow-hub-section" class="section-content hidden">
-                <header class="mb-stack-lg">
-                    <h2 class="font-headline-md text-headline-md text-on-surface mb-4">Shadow-Hub</h2>
-                    <p class="font-body-lg text-body-lg text-on-surface-variant">Learn from great speakers. Observe structure, delivery, and mastery. Then practice mimicking them.</p>
-                </header>
-
-                <!-- Difficulty Filter -->
-                <div class="flex gap-4 mb-stack-lg">
-                    <button onclick="filterSpeakers('easy')" class="filter-btn active font-label-caps text-label-caps px-4 py-2 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors" id="filter-easy">Easy</button>
-                    <button onclick="filterSpeakers('medium')" class="filter-btn font-label-caps text-label-caps px-4 py-2 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors" id="filter-medium">Medium</button>
-                    <button onclick="filterSpeakers('advanced')" class="filter-btn font-label-caps text-label-caps px-4 py-2 border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors" id="filter-advanced">Advanced</button>
-                </div>
-
-                <!-- Speaker Cards Grid -->
-                <div id="speakers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Populated by JavaScript -->
-                </div>
-            </section>
-
-            <!-- FRAMEWORKS SECTION -->
-            <section id="frameworks-section" class="section-content hidden">
-                <header class="mb-stack-lg">
-                    <h2 class="font-headline-md text-headline-md text-on-surface mb-4">Frameworks</h2>
-                    <p class="font-body-lg text-body-lg text-on-surface-variant">Mental models for organizing thought and commanding narrative flow.</p>
-                </header>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- STAR Framework -->
-                    <div class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg">
-                        <h3 class="font-headline-md text-headline-md text-on-surface mb-2">STAR</h3>
-                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-6">Situation, Task, Action, Result</p>
-                        <div class="space-y-4 text-sm">
-                            <div>
-                                <p class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-1">When to use</p>
-                                <p class="font-body-md text-on-surface-variant">Behavioral interviews, performance reviews.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PREP Framework -->
-                    <div class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg">
-                        <h3 class="font-headline-md text-headline-md text-on-surface mb-2">PREP</h3>
-                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-6">Point, Reason, Example, Point</p>
-                        <div class="space-y-4 text-sm">
-                            <div>
-                                <p class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-1">When to use</p>
-                                <p class="font-body-md text-on-surface-variant">Impromptu speaking, Q&A sessions.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SCQA Framework -->
-                    <div class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg">
-                        <h3 class="font-headline-md text-headline-md text-on-surface mb-2">SCQA</h3>
-                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-6">Situation, Complication, Question, Answer</p>
-                        <div class="space-y-4 text-sm">
-                            <div>
-                                <p class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-1">When to use</p>
-                                <p class="font-body-md text-on-surface-variant">Executive presentations, proposals.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- MECE Framework -->
-                    <div class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg">
-                        <h3 class="font-headline-md text-headline-md text-on-surface mb-2">MECE</h3>
-                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-6">Mutually Exclusive, Collectively Exhaustive</p>
-                        <div class="space-y-4 text-sm">
-                            <div>
-                                <p class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-1">When to use</p>
-                                <p class="font-body-md text-on-surface-variant">Problem-solving, categorizing data.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PPF Framework -->
-                    <div class="border border-outline-variant hover:border-primary hover-lift transition-all p-12 bg-surface-container-lowest rounded-lg md:col-span-2 md:w-1/2 md:mx-auto">
-                        <h3 class="font-headline-md text-headline-md text-on-surface mb-2">PPF</h3>
-                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-6">Past, Present, Future</p>
-                        <div class="space-y-4 text-sm">
-                            <div>
-                                <p class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-1">When to use</p>
-                                <p class="font-body-md text-on-surface-variant">Introductions, demonstrating trajectory.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- JOURNAL SECTION -->
-            <section id="journal-section" class="section-content hidden">
-                <header class="mb-stack-lg">
-                    <h2 class="font-headline-md text-headline-md text-on-surface mb-4">Journal</h2>
-                    <p class="font-body-lg text-body-lg text-on-surface-variant">Archive of your sessions. Build a practice log.</p>
-                </header>
-
-                <div id="journal-entries" class="space-y-6">
-                    <!-- Entries populated by JavaScript -->
-                </div>
-
-                <div id="empty-journal" class="text-center py-stack-lg">
-                    <p class="font-body-lg text-body-lg text-on-surface-variant mb-4">No entries yet. Start practicing to build your archive.</p>
-                    <button onclick="switchSection('speak')" class="font-label-caps text-label-caps text-primary hover:text-on-surface transition-colors border-b border-primary hover:border-on-surface pb-1">
-                        Begin First Session
-                    </button>
-                </div>
-            </section>
+        <!-- HOME -->
+        <div id="panel-home" class="tab-panel active text-center">
+            <h2 class="font-serif text-5xl text-on-surface" id="greeting">Hello, there!</h2>
+            <p class="text-muted mt-4">Pick a section above to start practicing.</p>
         </div>
+
+        <!-- SPEAK -->
+        <div id="panel-speak" class="tab-panel w-full max-w-4xl mx-auto h-full overflow-y-auto py-2">
+            <h3 class="font-serif text-2xl text-on-surface mb-3">Speak</h3>
+            <p class="text-muted mb-6">Practice impromptu speaking. Random topics. Real-time thinking. No preparation.</p>
+
+            <div class="border border-outline-variant bg-dark p-6 mb-6 rounded">
+                <h4 class="font-serif text-lg text-on-surface mb-3">Get Ready</h4>
+                <ul class="space-y-2">
+                    <li class="flex gap-3">
+                        <span class="text-primary flex-shrink-0">→</span>
+                        <p class="text-muted text-sm"><strong class="text-on-surface">Find a quiet space.</strong> Minimize distractions.</p>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-primary flex-shrink-0">→</span>
+                        <p class="text-muted text-sm"><strong class="text-on-surface">Position your device.</strong> Phone or laptop, steady and facing you.</p>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-primary flex-shrink-0">→</span>
+                        <p class="text-muted text-sm"><strong class="text-on-surface">Test audio.</strong> Make sure you can be heard clearly.</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <a href="https://www.unprompted.cool/" target="_blank" class="border border-outline-variant hover:border-primary p-6 bg-dark rounded transition-all">
+                    <h4 class="font-serif text-lg text-on-surface mb-2">Impromptu</h4>
+                    <p class="text-muted text-sm mb-4">Totally random prompts. 2 minutes. One topic. Go.</p>
+                    <div class="flex items-center gap-2 text-primary text-xs uppercase tracking-widest">Open Studio <span class="material-symbols-outlined text-sm">open_in_new</span></div>
+                </a>
+
+                <button onclick="spinTopic()" class="border border-outline-variant hover:border-primary p-6 bg-dark rounded transition-all text-left">
+                    <h4 class="font-serif text-lg text-on-surface mb-2">Spin a Topic</h4>
+                    <p class="text-muted text-sm mb-4">Get a random prompt. Record on your device.</p>
+                    <div class="flex items-center gap-2 text-primary text-xs uppercase tracking-widest">Generate Topic <span class="material-symbols-outlined text-sm">refresh</span></div>
+                </button>
+            </div>
+
+            <div id="topic-display" class="hidden mt-6 border-l-4 border-primary bg-dark p-6">
+                <p class="text-muted text-xs uppercase tracking-widest mb-3">Your Topic</p>
+                <h3 class="font-serif text-2xl text-on-surface mb-4" id="generated-topic"></h3>
+                <p class="text-muted text-sm mb-4">You have 2 minutes. Record on your device.</p>
+                <div class="flex gap-3">
+                    <button onclick="spinTopic()" class="border border-outline-variant text-on-surface px-5 py-2 text-xs uppercase tracking-widest hover:border-primary hover:text-primary transition-colors">New Topic</button>
+                    <button onclick="closeTopic()" class="bg-primary text-background px-5 py-2 text-xs uppercase tracking-widest hover:bg-opacity-90 transition-colors">Done</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SHADOW-HUB -->
+        <div id="panel-shadow-hub" class="tab-panel w-full max-w-4xl mx-auto h-full overflow-y-auto py-2">
+            <h3 class="font-serif text-2xl text-on-surface mb-3">Shadow-Hub</h3>
+            <p class="text-muted mb-6">Learn from great speakers. Observe structure, delivery, and mastery.</p>
+
+            <div class="flex gap-3 mb-6">
+                <button onclick="filterSpeakers('easy', this)" class="filter-btn active text-xs uppercase tracking-widest px-4 py-2 border border-outline-variant text-primary border-primary transition-colors">Easy</button>
+                <button onclick="filterSpeakers('medium', this)" class="filter-btn text-xs uppercase tracking-widest px-4 py-2 border border-outline-variant text-muted hover:text-primary hover:border-primary transition-colors">Medium</button>
+                <button onclick="filterSpeakers('advanced', this)" class="filter-btn text-xs uppercase tracking-widest px-4 py-2 border border-outline-variant text-muted hover:text-primary hover:border-primary transition-colors">Advanced</button>
+            </div>
+
+            <div id="speakers-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5 pb-2"></div>
+        </div>
+
+        <!-- FRAMEWORKS -->
+        <div id="panel-frameworks" class="tab-panel w-full max-w-4xl mx-auto h-full overflow-y-auto py-2">
+            <h3 class="font-serif text-2xl text-on-surface mb-3">Frameworks</h3>
+            <p class="text-muted mb-6">Mental models for organizing thought and narrative flow.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pb-2">
+                <div class="border border-outline-variant p-6 bg-dark rounded">
+                    <h4 class="font-serif text-lg text-on-surface mb-1">STAR</h4>
+                    <p class="text-muted text-xs uppercase tracking-widest mb-3">Situation, Task, Action, Result</p>
+                    <p class="text-muted text-sm mb-3">Behavioral interviews, performance reviews.</p>
+                    <a href="https://www.youtube.com/watch?v=u6rxKXfq9i0" target="_blank" class="text-primary hover:text-on-surface text-xs uppercase tracking-widest">Learn More →</a>
+                </div>
+                <div class="border border-outline-variant p-6 bg-dark rounded">
+                    <h4 class="font-serif text-lg text-on-surface mb-1">PREP</h4>
+                    <p class="text-muted text-xs uppercase tracking-widest mb-3">Point, Reason, Example, Point</p>
+                    <p class="text-muted text-sm mb-3">Impromptu speaking, Q&A sessions.</p>
+                    <a href="https://www.youtube.com/watch?v=G2hS46GEb2g" target="_blank" class="text-primary hover:text-on-surface text-xs uppercase tracking-widest">Learn More →</a>
+                </div>
+                <div class="border border-outline-variant p-6 bg-dark rounded">
+                    <h4 class="font-serif text-lg text-on-surface mb-1">SCQA</h4>
+                    <p class="text-muted text-xs uppercase tracking-widest mb-3">Situation, Complication, Question, Answer</p>
+                    <p class="text-muted text-sm mb-3">Executive presentations, proposals.</p>
+                    <a href="https://www.youtube.com/watch?v=2FdL7nKPiw8" target="_blank" class="text-primary hover:text-on-surface text-xs uppercase tracking-widest">Learn More →</a>
+                </div>
+                <div class="border border-outline-variant p-6 bg-dark rounded">
+                    <h4 class="font-serif text-lg text-on-surface mb-1">MECE</h4>
+                    <p class="text-muted text-xs uppercase tracking-widest mb-3">Mutually Exclusive, Collectively Exhaustive</p>
+                    <p class="text-muted text-sm mb-3">Problem-solving, categorizing data.</p>
+                    <a href="https://www.youtube.com/watch?v=bvwb2SfV3HE" target="_blank" class="text-primary hover:text-on-surface text-xs uppercase tracking-widest">Learn More →</a>
+                </div>
+                <div class="border border-outline-variant p-6 bg-dark rounded md:col-span-2 md:w-1/2 md:mx-auto">
+                    <h4 class="font-serif text-lg text-on-surface mb-1">PPF</h4>
+                    <p class="text-muted text-xs uppercase tracking-widest mb-3">Past, Present, Future</p>
+                    <p class="text-muted text-sm mb-3">Introductions, demonstrating trajectory.</p>
+                    <a href="https://www.youtube.com/watch?v=Yl0W-8DHaQg" target="_blank" class="text-primary hover:text-on-surface text-xs uppercase tracking-widest">Learn More →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- JOURNAL -->
+        <div id="panel-journal" class="tab-panel w-full max-w-4xl mx-auto text-center">
+            <h3 class="font-serif text-2xl text-on-surface mb-3">Journal</h3>
+            <p class="text-muted mb-6">Archive of your sessions. Build a practice log.</p>
+
+            <div id="journal-entries" class="space-y-3 text-left"></div>
+
+            <div id="empty-journal" class="py-6">
+                <p class="text-muted mb-4">No entries yet. Start practicing to build your archive.</p>
+                <button onclick="switchTab('speak')" class="text-primary hover:text-on-surface text-xs uppercase tracking-widest">Begin First Session →</button>
+            </div>
+        </div>
+
     </main>
-
-    <!-- Footer -->
-    <footer class="bg-surface border-t border-outline-variant mt-stack-lg">
-        <div class="px-gutter md:px-margin-page py-stack-md max-w-container-max mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
-                <div class="font-headline-md text-primary">Orator</div>
-                <div class="font-label-caps text-label-caps text-on-surface-variant">© Orator. The Vessel for Voice.</div>
-            </div>
-        </div>
-    </footer>
 </div>
 
-<!-- PROFILE MODAL (Overlay) -->
-<div id="profile-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-gutter">
-    <div class="bg-surface border border-outline-variant rounded-lg max-w-md w-full p-8">
-        <div class="flex justify-between items-center mb-stack-md">
-            <h2 class="font-headline-md text-headline-md text-on-surface">Settings</h2>
-            <button onclick="toggleProfile()" class="text-on-surface-variant hover:text-primary">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-        </div>
+<!-- REMINDER SETUP MODAL -->
+<div id="reminder-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-gutter">
+    <div class="bg-dark border border-outline-variant rounded-lg max-w-md w-full p-8">
+        <h2 class="font-serif text-xl text-on-surface mb-4">Daily Reminder</h2>
+        <p class="text-muted text-sm mb-6">Get reminded to practice every day at 9pm for 30 days.</p>
 
-        <div class="space-y-6 border-t border-outline-variant pt-6">
-            <div>
-                <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest block mb-2">Name</label>
-                <p id="modal-name" class="font-body-lg text-on-surface"></p>
-            </div>
+        <label class="flex items-center gap-3 mb-2">
+            <input type="checkbox" id="enable-reminder" checked class="w-4 h-4">
+            <span class="text-on-surface text-sm">Enable daily 9pm reminder</span>
+        </label>
 
-            <div>
-                <label class="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" id="reminder-toggle" checked class="w-4 h-4 bg-primary border border-outline-variant rounded">
-                    <span class="font-body-md text-on-surface">Daily 9pm reminder</span>
-                </label>
-                <p class="font-body-md text-on-surface-variant text-xs mt-2">Get a reminder if you skip practice.</p>
-            </div>
-
-            <button onclick="logout()" class="w-full text-error font-label-caps text-label-caps py-2 border border-error hover:bg-error hover:text-background transition-colors uppercase tracking-widest">
-                Logout
-            </button>
+        <div class="flex gap-4 mt-8">
+            <button onclick="skipReminder()" class="flex-1 border border-outline-variant text-on-surface py-2 text-xs uppercase tracking-widest hover:border-primary hover:text-primary transition-colors">Skip</button>
+            <button onclick="setupReminder()" class="flex-1 bg-primary text-background py-2 text-xs uppercase tracking-widest hover:bg-opacity-90 transition-colors">Setup</button>
         </div>
     </div>
 </div>
 
 <script>
-    // SPEAKER DATA - 60 curated TED speakers (20 per difficulty)
     const speakers = {
         easy: [
-            { name: "Susan Cain", title: "The Power of Introverts", duration: "14:04", youtubeId: "c0KYU2j0TM8" },
-            { name: "Simon Sinek", title: "How Great Leaders Inspire Action", duration: "18:04", youtubeId: "qp0HIF3SfI4" },
-            { name: "Brené Brown", title: "The Power of Vulnerability", duration: "20:19", youtubeId: "iCvmsMzlF7o" },
-            { name: "Tony Robbins", title: "Why We Do What We Do", duration: "21:49", youtubeId: "0uD9JuStQUI" },
-            { name: "Elizabeth Gilbert", title: "Your Elusive Creative Genius", duration: "19:20", youtubeId: "86x-u-tz0MA" },
-            { name: "Amy Cuddy", title: "Your Body Language May Shape Who You Are", duration: "21:02", youtubeId: "Ks-_Mh1QhMc" },
-            { name: "Chimamanda Ngozi Adichie", title: "The Danger of a Single Story", duration: "18:49", youtubeId: "D9Ihs241zeg" },
-            { name: "Ken Robinson", title: "Do Schools Kill Creativity?", duration: "19:22", youtubeId: "iG9CE55wbtY" },
-            { name: "Malcolm Gladwell", title: "The Unheard Story of David and Goliath", duration: "17:11", youtubeId: "3LopI4YeC4I" },
-            { name: "Sheryl Sandberg", title: "Why We Have Too Few Women Leaders", duration: "14:54", youtubeId: "18uDutylDa8" },
-            { name: "Temple Grandin", title: "The World Needs All Kinds of Minds", duration: "19:13", youtubeId: "fn_9-HUY-sU" },
-            { name: "Lupita Nyong'o", title: "My Story of Embracing My Dark Skin", duration: "07:53", youtubeId: "PfH8LoCWc98" },
-            { name: "Adam Grant", title: "The Surprising Habits of Original Thinkers", duration: "15:42", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Diane Nyad", title: "Never Give Up", duration: "17:59", youtubeId: "iZu-tpzYhWc" },
-            { name: "Jane McGonigal", title: "The Game That Can Give You 10 Extra Years", duration: "18:34", youtubeId: "9rblH6sBF50" },
-            { name: "Mark Roth", title: "Suspended Animation", duration: "17:15", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Sarah-Jayne Blakemore", title: "The Adolescent Brain", duration: "16:52", youtubeId: "CUtDbyuUx00" },
-            { name: "Ritesh Agarwal", title: "Building for Next Billion Users", duration: "11:45", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Audrey Tang", title: "Digital Collaboration & Inclusivity", duration: "19:22", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Fei-Fei Li", title: "The Humanity of Artificial Intelligence", duration: "14:17", youtubeId: "dQw4w9WgXcQ" }
+            { name: "Susan Cain", title: "The Power of Introverts", youtubeId: "c0KYU2j0TM8" },
+            { name: "Simon Sinek", title: "How Great Leaders Inspire Action", youtubeId: "qp0HIF3SfI4" },
+            { name: "Brené Brown", title: "The Power of Vulnerability", youtubeId: "iCvmsMzlF7o" },
+            { name: "Elizabeth Gilbert", title: "Your Elusive Creative Genius", youtubeId: "86x-u-tz0MA" },
+            { name: "Amy Cuddy", title: "Your Body Language May Shape Who You Are", youtubeId: "Ks-_Mh1QhMc" },
+            { name: "Chimamanda Ngozi Adichie", title: "The Danger of a Single Story", youtubeId: "D9Ihs241zeg" },
+            { name: "Ken Robinson", title: "Do Schools Kill Creativity?", youtubeId: "iG9CE55wbtY" },
+            { name: "Malcolm Gladwell", title: "The Unheard Story of David and Goliath", youtubeId: "3LopI4YeC4I" },
+            { name: "Sheryl Sandberg", title: "Why We Have Too Few Women Leaders", youtubeId: "18uDutylDa8" },
+            { name: "Temple Grandin", title: "The World Needs All Kinds of Minds", youtubeId: "fn_9-HUY-sU" }
         ],
         medium: [
-            { name: "Chris Anderson", title: "TED and the Power of Stories", duration: "15:24", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Jason Fried", title: "Why Work Doesn't Happen at Work", duration: "16:26", youtubeId: "5XD2kq3ZfYw" },
-            { name: "Mihaly Csikszentmihalyi", title: "Flow, The Secret to Happiness", duration: "18:33", youtubeId: "fXIeFJCqsPs" },
-            { name: "Dan Pink", title: "The Puzzle of Motivation", duration: "18:36", youtubeId: "rrkrvAUbU9Y" },
-            { name: "Jonathan Haidt", title: "The Moral Roots", duration: "19:41", youtubeId: "vs41JrnGaxc" },
-            { name: "Jill Bolte Taylor", title: "My Stroke of Insight", duration: "18:41", youtubeId: "UyyjU8fzEYU" },
-            { name: "Barry Schwartz", title: "The Paradox of Choice", duration: "21:17", youtubeId: "VO6XEQIsCoM" },
-            { name: "Seth Godin", title: "The Tribes We Lead", duration: "18:36", youtubeId: "xnKZst-U2ww" },
-            { name: "Aubrey de Grey", title: "A Road Map to End Aging", duration: "23:35", youtubeId: "AvWtSUdOWVI" },
-            { name: "Sherry Turkle", title: "Connected, But Alone?", duration: "19:47", youtubeId: "t3m0bVool5g" },
-            { name: "Pattie Maes", title: "Unveiling the Sixth Sense", duration: "12:10", youtubeId: "YrtANr8G0bc" },
-            { name: "Tan France", title: "The Joy of Fashion & Style", duration: "14:04", youtubeId: "arj7oStGLkU" },
-            { name: "Amanda Palmer", title: "The Art of Asking", duration: "12:42", youtubeId: "xDYbF221X8w" },
-            { name: "Chris Hadfield", title: "An Astronaut's View of Earth", duration: "16:14", youtubeId: "qP9rS3K8b3U" },
-            { name: "Meg Jay", title: "Why 30 is Not the New 20", duration: "15:21", youtubeId: "k7X7sZzSXYs" },
-            { name: "Susan David", title: "The Gift and Power of Emotional Courage", duration: "16:54", youtubeId: "ndVrFchMOAU" },
-            { name: "Priya Parker", title: "How to Build Belonging", duration: "14:25", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Celeste Headlee", title: "We Need to Talk", duration: "11:47", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Sheryl Sandberg", title: "Option B", duration: "15:48", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Ryan Tedder", title: "The Making of Viral Music", duration: "13:22", youtubeId: "dQw4w9WgXcQ" }
+            { name: "Jason Fried", title: "Why Work Doesn't Happen at Work", youtubeId: "5XD2kq3ZfYw" },
+            { name: "Mihaly Csikszentmihalyi", title: "Flow, The Secret to Happiness", youtubeId: "fXIeFJCqsPs" },
+            { name: "Dan Pink", title: "The Puzzle of Motivation", youtubeId: "rrkrvAUbU9Y" },
+            { name: "Jonathan Haidt", title: "The Moral Roots", youtubeId: "vs41JrnGaxc" },
+            { name: "Jill Bolte Taylor", title: "My Stroke of Insight", youtubeId: "UyyjU8fzEYU" },
+            { name: "Barry Schwartz", title: "The Paradox of Choice", youtubeId: "VO6XEQIsCoM" },
+            { name: "Seth Godin", title: "The Tribes We Lead", youtubeId: "xnKZst-U2ww" },
+            { name: "Sherry Turkle", title: "Connected, But Alone?", youtubeId: "t3m0bVool5g" },
+            { name: "Amanda Palmer", title: "The Art of Asking", youtubeId: "xDYbF221X8w" },
+            { name: "Susan David", title: "The Gift and Power of Emotional Courage", youtubeId: "ndVrFchMOAU" }
         ],
         advanced: [
-            { name: "Yuval Noah Harari", title: "What Explains the Rise of Humans?", duration: "18:33", youtubeId: "nzj7Wg4DAbs" },
-            { name: "Steven Pinker", title: "The Better Angels of Our Nature", duration: "19:27", youtubeId: "5U0fF1Aj-k0" },
-            { name: "Deepak Chopra", title: "The Future of Medicine", duration: "20:38", youtubeId: "TvzZo6XiFl8" },
-            { name: "Neil deGrasse Tyson", title: "We Stopped Dreaming", duration: "07:31", youtubeId: "CbIZU8cQWXc" },
-            { name: "Daniel Kahneman", title: "The Riddle of Experience vs Memory", duration: "20:19", youtubeId: "XpNPCeZ0eZs" },
-            { name: "Eric Ries", title: "The Lean Startup", duration: "19:47", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Yochai Benkler", title: "The New Open-Source Economics", duration: "18:26", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Richard Dawkins", title: "Militant Atheism", duration: "30:53", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Sam Harris", title: "Science Can Answer Moral Questions", duration: "14:31", youtubeId: "Hj9oB4zpHww" },
-            { name: "Benjamin Barber", title: "America's Uncivil Wars", duration: "18:35", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Clay Shirky", title: "How Cognitive Surplus Changes the World", duration: "12:47", youtubeId: "Sr6R2rYUFZk" },
-            { name: "Ramachandran", title: "The Neurons That Shaped Civilization", duration: "17:57", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Hans Rosling", title: "Stats That Reshape Your Worldview", duration: "19:50", youtubeId: "hVimVzgtD6w" },
-            { name: "Angela Lee Duckworth", title: "Grit: The Power of Passion and Perseverance", duration: "06:12", youtubeId: "H14bBuluwB8" },
-            { name: "Alain de Botton", title: "On Possessions", duration: "12:17", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Marina Abramović", title: "An Artist on the Frontline of Change", duration: "15:46", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Brené Brown", title: "Listening to Shame", duration: "19:47", youtubeId: "psN1DORYYV0" },
-            { name: "Paul Bloom", title: "The Psychology of Everyday Reasoning", duration: "17:46", youtubeId: "dQw4w9WgXcQ" },
-            { name: "David Foster Wallace", title: "Consider the Lobster", duration: "27:15", youtubeId: "dQw4w9WgXcQ" },
-            { name: "Cornel West", title: "On Black Prophetic Tradition", duration: "32:10", youtubeId: "dQw4w9WgXcQ" }
+            { name: "Yuval Noah Harari", title: "What Explains the Rise of Humans?", youtubeId: "nzj7Wg4DAbs" },
+            { name: "Steven Pinker", title: "The Better Angels of Our Nature", youtubeId: "5U0fF1Aj-k0" },
+            { name: "Neil deGrasse Tyson", title: "We Stopped Dreaming", youtubeId: "CbIZU8cQWXc" },
+            { name: "Daniel Kahneman", title: "The Riddle of Experience vs Memory", youtubeId: "XpNPCeZ0eZs" },
+            { name: "Sam Harris", title: "Science Can Answer Moral Questions", youtubeId: "Hj9oB4zpHww" },
+            { name: "Clay Shirky", title: "How Cognitive Surplus Changes the World", youtubeId: "Sr6R2rYUFZk" },
+            { name: "Hans Rosling", title: "Stats That Reshape Your Worldview", youtubeId: "hVimVzgtD6w" },
+            { name: "Angela Lee Duckworth", title: "Grit: The Power of Passion and Perseverance", youtubeId: "H14bBuluwB8" },
+            { name: "Brené Brown", title: "Listening to Shame", youtubeId: "psN1DORYYV0" }
         ]
     };
 
@@ -535,93 +405,113 @@
     ];
 
     let currentUser = null;
-    let currentMode = 'dark';
 
-    // INITIALIZATION
     function init() {
-        loadUser();
         applyTheme();
         renderSpeakers('easy');
-        renderJournal();
-    }
 
-    function loadUser() {
-        const user = JSON.parse(localStorage.getItem('orator_user'));
-        if (user) {
-            currentUser = user;
-            goToDashboard();
+        const stored = localStorage.getItem('orator_user');
+        if (stored) {
+            currentUser = JSON.parse(stored);
+            enterDashboard(true); // instant, no animation
         }
     }
 
     function submitName() {
-        const name = document.getElementById('user-name-input').value.trim();
-        if (!name) return alert('Please enter your name');
-
+        const input = document.getElementById('user-name-input');
+        const name = input.value.trim();
+        if (!name) {
+            input.classList.remove('error');
+            void input.offsetWidth;
+            input.classList.add('error');
+            input.focus();
+            return;
+        }
         currentUser = { name, createdAt: new Date().toISOString() };
         localStorage.setItem('orator_user', JSON.stringify(currentUser));
-        
-        document.getElementById('greeting-name').textContent = `Hello, ${name}`;
-        goToDashboard();
+        enterDashboard(false);
     }
 
-    function goToDashboard() {
-        document.getElementById('name-page').classList.remove('active');
-        document.getElementById('dashboard-page').classList.add('active');
-        document.getElementById('modal-name').textContent = currentUser.name;
+    function enterDashboard(instant) {
+        document.getElementById('greeting').textContent = `Hello, ${currentUser.name}!`;
+        document.getElementById('user-chip').textContent = currentUser.name;
+
+        const hero = document.getElementById('brand-hero');
+        const entry = document.getElementById('stage-entry');
+        const mini = document.getElementById('brand-mini');
+        const topRight = document.getElementById('top-right');
+        const nav = document.getElementById('stage-nav');
+        const zone = document.getElementById('content-zone');
+
+        if (instant) {
+            hero.style.display = 'none';
+            entry.style.display = 'none';
+            mini.classList.add('arrived');
+            mini.style.transition = 'none';
+            topRight.classList.add('arrived');
+            topRight.style.transition = 'none';
+            nav.classList.add('arrived');
+            nav.style.transition = 'none';
+            zone.classList.add('arrived');
+            zone.style.transition = 'none';
+            return;
+        }
+
+        hero.classList.add('leaving');
+        entry.classList.add('leaving');
+
+        setTimeout(() => {
+            hero.style.display = 'none';
+            entry.style.display = 'none';
+            mini.classList.add('arrived');
+            topRight.classList.add('arrived');
+            nav.classList.add('arrived');
+            zone.classList.add('arrived');
+        }, 350);
     }
 
-    function goToPage(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        window.scrollTo(0, 0);
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tab);
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.toggle('active', panel.id === `panel-${tab}`);
+        });
+
+        const zone = document.getElementById('content-zone');
+        const scrollableTabs = ['speak', 'shadow-hub', 'frameworks'];
+        if (scrollableTabs.includes(tab)) {
+            zone.classList.remove('mode-fixed', 'items-center', 'justify-center');
+            zone.classList.add('mode-scroll', 'items-stretch', 'justify-start');
+        } else {
+            zone.classList.remove('mode-scroll', 'items-stretch', 'justify-start');
+            zone.classList.add('mode-fixed', 'items-center', 'justify-center');
+        }
     }
 
-    function switchSection(sectionName) {
-        // Hide all sections
-        document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
-        
-        // Hide welcome banner
-        document.getElementById('welcome-banner').classList.add('hidden');
-
-        // Update nav buttons
-        document.querySelectorAll('.nav-section').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`nav-${sectionName}`).classList.add('active');
-
-        // Show selected section
-        document.getElementById(`${sectionName}-section`).classList.remove('hidden');
-
-        window.scrollTo(0, 0);
-    }
-
-    // SPEAKERS FUNCTIONS
-    function filterSpeakers(difficulty) {
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`filter-${difficulty}`).classList.add('active');
+    function filterSpeakers(difficulty, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => {
+            b.classList.remove('active', 'text-primary', 'border-primary');
+            b.classList.add('text-muted');
+        });
+        btn.classList.add('active', 'text-primary', 'border-primary');
+        btn.classList.remove('text-muted');
         renderSpeakers(difficulty);
     }
 
     function renderSpeakers(difficulty) {
         const grid = document.getElementById('speakers-grid');
-        grid.innerHTML = '';
-        speakers[difficulty].forEach(speaker => {
-            const card = document.createElement('div');
-            card.className = 'border border-outline-variant hover:border-primary hover-lift transition-all p-8 bg-surface-container-lowest rounded-lg cursor-pointer';
-            card.innerHTML = `
-                <span class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-2 inline-block">${difficulty}</span>
-                <h3 class="font-headline-md text-headline-md text-on-surface mb-1">${speaker.name}</h3>
-                <p class="font-body-md text-body-md text-on-surface-variant mb-4">${speaker.title} • ${speaker.duration}</p>
-                <a href="https://www.youtube.com/watch?v=${speaker.youtubeId}" target="_blank" class="inline-flex items-center gap-2 text-on-surface hover:text-primary transition-colors font-label-caps text-label-caps">
-                    Watch <span class="material-symbols-outlined text-sm">open_in_new</span>
-                </a>
-            `;
-            grid.appendChild(card);
-        });
+        grid.innerHTML = speakers[difficulty].map(s => `
+            <a href="https://www.youtube.com/watch?v=${s.youtubeId}" target="_blank" class="border border-outline-variant hover:border-primary p-5 bg-dark rounded transition-all">
+                <h5 class="font-serif text-on-surface mb-1">${s.name}</h5>
+                <p class="text-muted text-sm">${s.title}</p>
+            </a>
+        `).join('');
     }
 
-    // TOPICS FUNCTION
     function spinTopic() {
-        const randomTopic = topicPrompts[Math.floor(Math.random() * topicPrompts.length)];
-        document.getElementById('generated-topic').textContent = randomTopic;
+        const prompt = topicPrompts[Math.floor(Math.random() * topicPrompts.length)];
+        document.getElementById('generated-topic').textContent = prompt;
         document.getElementById('topic-display').classList.remove('hidden');
     }
 
@@ -629,64 +519,46 @@
         document.getElementById('topic-display').classList.add('hidden');
     }
 
-    // JOURNAL RENDERING
-    function renderJournal() {
-        const entries = JSON.parse(localStorage.getItem('orator_journal') || '[]');
-        const container = document.getElementById('journal-entries');
-        
-        if (entries.length === 0) {
-            document.getElementById('empty-journal').classList.remove('hidden');
-            container.innerHTML = '';
-            return;
-        }
-
-        document.getElementById('empty-journal').classList.add('hidden');
-        container.innerHTML = entries.map(entry => `
-            <div class="border border-outline-variant p-8 bg-surface-container-lowest rounded-lg">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">${entry.speaker || 'Session'}</p>
-                        <p class="font-body-md text-body-md text-on-surface-variant">${new Date(entry.date).toLocaleDateString()}</p>
-                    </div>
-                    <p class="font-body-md text-body-md text-primary">${Math.floor(entry.duration / 60)}:${String(entry.duration % 60).padStart(2, '0')}</p>
-                </div>
-                ${entry.reflection ? `<p class="font-body-md text-on-surface">${entry.reflection}</p>` : ''}
-            </div>
-        `).join('');
-    }
-
-    // DARK/LIGHT MODE
-    function toggleDarkMode() {
-        currentMode = currentMode === 'dark' ? 'light' : 'dark';
-        applyTheme();
-        localStorage.setItem('orator_theme', currentMode);
+    function toggleTheme() {
+        const isDark = document.documentElement.classList.contains('dark');
+        document.documentElement.classList.toggle('dark', !isDark);
+        document.documentElement.classList.toggle('light', isDark);
+        localStorage.setItem('orator_theme', isDark ? 'light' : 'dark');
+        document.getElementById('theme-icon').textContent = isDark ? 'dark_mode' : 'light_mode';
     }
 
     function applyTheme() {
-        const savedTheme = localStorage.getItem('orator_theme') || 'dark';
-        currentMode = savedTheme;
-        document.documentElement.classList.toggle('dark', currentMode === 'dark');
-        document.documentElement.classList.toggle('light', currentMode === 'light');
-        document.body.classList.toggle('dark', currentMode === 'dark');
-        document.body.classList.toggle('light', currentMode === 'light');
-        document.getElementById('theme-icon').textContent = currentMode === 'dark' ? 'light_mode' : 'dark_mode';
+        const theme = localStorage.getItem('orator_theme') || 'dark';
+        document.documentElement.classList.add(theme);
+        document.getElementById('theme-icon').textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
     }
 
-    // PROFILE MODAL
-    function toggleProfile() {
-        document.getElementById('profile-modal').classList.toggle('hidden');
+    function showReminderModal() {
+        if (!localStorage.getItem('orator_reminder_asked')) {
+            document.getElementById('reminder-modal').classList.remove('hidden');
+        }
     }
 
-    function logout() {
-        localStorage.removeItem('orator_user');
-        document.getElementById('profile-modal').classList.add('hidden');
-        currentUser = null;
-        goToPage('name-page');
-        document.getElementById('user-name-input').value = '';
+    function setupReminder() {
+        if (document.getElementById('enable-reminder').checked) {
+            const reminderDate = new Date();
+            reminderDate.setDate(reminderDate.getDate() + 30);
+            localStorage.setItem('orator_reminder_end', reminderDate.toISOString());
+        }
+        localStorage.setItem('orator_reminder_asked', 'true');
+        document.getElementById('reminder-modal').classList.add('hidden');
     }
 
-    // Initialize
-    document.addEventListener('DOMContentLoaded', init);
+    function skipReminder() {
+        localStorage.setItem('orator_reminder_asked', 'true');
+        document.getElementById('reminder-modal').classList.add('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        init();
+        // show reminder modal a beat after entering dashboard (first-time users only)
+        setTimeout(showReminderModal, currentUser ? 100 : 900);
+    });
 </script>
 </body>
 </html>
