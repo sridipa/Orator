@@ -233,7 +233,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <a href="https://www.unprompted.cool/" target="_blank" class="border border-outline-variant hover:border-primary p-6 bg-dark rounded transition-all">
                     <h4 class="font-serif text-lg text-on-surface mb-2">Impromptu</h4>
-                    <p class="text-muted text-sm mb-4">Totally random prompts. 2 minutes. One topic. Go.</p>
+                    <p class="text-muted text-sm mb-4">Off the cuff or deep research? Your pick.</p>
                     <div class="flex items-center gap-2 text-primary text-xs uppercase tracking-widest">Open Studio <span class="material-symbols-outlined text-sm">open_in_new</span></div>
                 </a>
 
@@ -244,14 +244,39 @@
                 </button>
             </div>
 
-            <div id="topic-display" class="hidden mt-6 border-l-4 border-primary bg-dark p-6">
+        </div>
+
+        <!-- SPIN A TOPIC — full-screen ready / countdown overlay -->
+        <div id="topic-overlay" class="hidden fixed inset-0 z-50 bg-background flex flex-col items-center justify-center px-gutter">
+
+            <!-- step 1: confirm ready -->
+            <div id="topic-confirm" class="text-center max-w-sm w-full">
                 <p class="text-muted text-xs uppercase tracking-widest mb-3">Your Topic</p>
-                <h3 class="font-serif text-2xl text-on-surface mb-4" id="generated-topic"></h3>
-                <p class="text-muted text-sm mb-4">You have 2 minutes. Record on your device.</p>
-                <div class="flex gap-3">
-                    <button onclick="spinTopic()" class="border border-outline-variant text-on-surface px-5 py-2 text-xs uppercase tracking-widest hover:border-primary hover:text-primary transition-colors">New Topic</button>
-                    <button onclick="closeTopic()" class="bg-primary text-background px-5 py-2 text-xs uppercase tracking-widest hover:bg-opacity-90 transition-colors">Done</button>
+                <h3 class="font-serif text-3xl text-on-surface mb-10" id="generated-topic"></h3>
+                <p class="text-muted mb-8">Ready with your recording device?</p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="startTopicTimer()" class="bg-primary text-background py-3 text-xs uppercase tracking-widest hover:bg-opacity-90 transition-colors">Yes, I'm ready</button>
+                    <button onclick="spinTopic()" class="border border-outline-variant text-on-surface py-3 text-xs uppercase tracking-widest hover:border-primary hover:text-primary transition-colors">New Topic</button>
                 </div>
+                <button onclick="closeTopic()" class="text-muted text-xs uppercase tracking-widest underline mt-10 hover:text-primary transition-colors">Close</button>
+            </div>
+
+            <!-- step 2: countdown -->
+            <div id="topic-timer-view" class="hidden text-center max-w-sm w-full">
+                <p class="font-serif text-primary text-xs uppercase tracking-[0.3em] mb-8 px-4" id="timer-topic-label"></p>
+
+                <div class="relative w-[240px] h-[240px] mx-auto mb-8">
+                    <svg viewBox="0 0 220 220" class="w-full h-full -rotate-90">
+                        <circle cx="110" cy="110" r="95" fill="none" stroke-width="12" class="stroke-outline-variant/40"></circle>
+                        <circle id="timer-arc" cx="110" cy="110" r="95" fill="none" stroke-width="12" stroke-linecap="round" class="stroke-primary" stroke-dasharray="596.9" stroke-dashoffset="0"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span class="font-serif text-6xl text-primary" id="timer-display">2:00</span>
+                    </div>
+                </div>
+
+                <p class="text-on-surface text-lg mb-8" id="timer-status">Speak.</p>
+                <button onclick="closeTopic()" class="text-muted text-xs uppercase tracking-widest underline hover:text-primary transition-colors">Close</button>
             </div>
         </div>
 
@@ -509,14 +534,64 @@
         `).join('');
     }
 
+    const TOPIC_DURATION = 120; // seconds
+    const TIMER_CIRCUMFERENCE = 2 * Math.PI * 95; // matches r=95 on the SVG circle
+    let topicTimerInterval = null;
+    let topicRemaining = TOPIC_DURATION;
+
     function spinTopic() {
         const prompt = topicPrompts[Math.floor(Math.random() * topicPrompts.length)];
         document.getElementById('generated-topic').textContent = prompt;
-        document.getElementById('topic-display').classList.remove('hidden');
+        document.getElementById('timer-topic-label').textContent = prompt;
+
+        stopTopicTimer();
+        document.getElementById('topic-overlay').classList.remove('hidden');
+        document.getElementById('topic-confirm').classList.remove('hidden');
+        document.getElementById('topic-timer-view').classList.add('hidden');
+    }
+
+    function startTopicTimer() {
+        document.getElementById('topic-confirm').classList.add('hidden');
+        document.getElementById('topic-timer-view').classList.remove('hidden');
+        document.getElementById('timer-status').textContent = 'Speak.';
+
+        topicRemaining = TOPIC_DURATION;
+        const arc = document.getElementById('timer-arc');
+        arc.style.transition = 'none';
+        updateTimerDisplay();
+        requestAnimationFrame(() => { arc.style.transition = 'stroke-dashoffset 1s linear'; });
+
+        stopTopicTimer();
+        topicTimerInterval = setInterval(() => {
+            topicRemaining--;
+            updateTimerDisplay();
+            if (topicRemaining <= 0) {
+                stopTopicTimer();
+                document.getElementById('timer-status').textContent = "Time's up.";
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const clamped = Math.max(topicRemaining, 0);
+        const mins = Math.floor(clamped / 60);
+        const secs = clamped % 60;
+        document.getElementById('timer-display').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+        const fraction = clamped / TOPIC_DURATION;
+        document.getElementById('timer-arc').style.strokeDashoffset = TIMER_CIRCUMFERENCE * (1 - fraction);
+    }
+
+    function stopTopicTimer() {
+        if (topicTimerInterval) {
+            clearInterval(topicTimerInterval);
+            topicTimerInterval = null;
+        }
     }
 
     function closeTopic() {
-        document.getElementById('topic-display').classList.add('hidden');
+        stopTopicTimer();
+        document.getElementById('topic-overlay').classList.add('hidden');
     }
 
     function toggleTheme() {
