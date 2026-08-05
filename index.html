@@ -1,24 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Orator</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Georgia&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div id="app"></div>
+  <!-- Top Navigation -->
+  <header class="navbar">
+    <a href="#" class="brand-logo">ORATOR</a>
+    <nav class="nav-links">
+      <a href="#practice" class="nav-link">Practice</a>
+      <a href="#learn" class="nav-link">Learn</a>
+      <a href="#library" class="nav-link">Library</a>
+      <a href="#frameworks" class="nav-link">Frameworks</a>
+      <a href="#journal" class="nav-link">Journal</a>
+    </nav>
+  </header>
 
-<script src="js/app.js"></script>
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Hero Greeting -->
+    <section class="hero">
+      <p class="greeting-time" id="greetingTime">Good evening,</p>
+      <h1 class="greeting-name">Sridipa</h1>
+      <p class="hero-subtext">What would you like to practice today?</p>
+    </section>
 
+    <!-- Workspace Grid -->
+    <section class="card-grid">
+      
+      <!-- Card 1: Practice -->
+      <a href="#practice" class="card">
+        <div class="card-content">
+          <span class="card-category">Impromptu & Speech</span>
+          <h2 class="card-title">Practice</h2>
+          <p class="card-description">Build confidence through spontaneous speaking. Choose timed topics, interviews, or custom prompts.</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-action">Start session &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Card 2: Learn -->
+      <a href="#learn" class="card card-featured">
+        <div class="card-content">
+          <span class="card-category">Learn & Present</span>
+          <h2 class="card-title">Today's Curiosity</h2>
+          <p class="curiosity-quote" id="curiosityText">Loading curiosity...</p>
+          <p class="card-description">Research the topic, organize your narrative, and present it back clearly.</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-action">Explore topic &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Card 3: Library -->
+      <a href="#library" class="card">
+        <div class="card-content">
+          <span class="card-category">Speaker Library</span>
+          <h2 class="card-title">Study Masters</h2>
+          <p class="card-description">Shadow world-class communicators like Simon Sinek, Brené Brown, and Shashi Tharoor.</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-action">Browse speeches &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Card 4: Frameworks -->
+      <a href="#frameworks" class="card">
+        <div class="card-content">
+          <span class="card-category">Mental Models</span>
+          <h2 class="card-title">Frameworks</h2>
+          <p class="card-description">Structure your thinking using proven models like STAR, PREP, MECE, and SCQA.</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-action">Review models &rarr;</span>
+        </div>
+      </a>
+
+    </section>
+
+    <!-- Recent Activity -->
+    <footer class="recent-session">
+      <span class="recent-label">Recent</span>
+      <a href="#resume" class="recent-link">The Future of Work &bull; <span class="recent-time">2 days ago</span></a>
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
