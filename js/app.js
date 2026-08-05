@@ -1,1 +1,1 @@
-
+console.log("Orator started.");
